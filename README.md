@@ -4,9 +4,15 @@ TriggerHelper Framework
 
 # Quick Start
 1) Create an Apex trigger on your object (e.g Account)
-TriggerDispatcher.run(Account.SObjectType);
+```
+trigger AccountTrigger on Acccount (before insert, before update, before delete
+                                                                  , after insert, after update
+                                                                  , after delete, after undelete ) {
+   TriggerDispatcher.run();
+}
+```
 
-2) Create your first helper Apex Class by Subclassing  AbstractBaseTriggerHelper
+2) Create your first helper Apex Class by extending  AbstractBaseTriggerHelper
 (Override methods only as needed for your use case)
 ```
 /**

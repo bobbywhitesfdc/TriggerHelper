@@ -1,5 +1,5 @@
 /**
- * Unit Test for TriggerDispatcher - mocks all of the Trigger phases.
+ * Unit Test for TriggerDispatcher - mocks all of the Trigger phases
  **/ 
 @Istest(isParallel=true)
 public class TriggerDispatcherTest {
@@ -161,7 +161,7 @@ public class TriggerDispatcherTest {
         Test.StopTest();
     }
     
-    public static testmethod void testRunSObjectTypePassed() {
+    public static testmethod void testRunMocked() {
         List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
         testData.add(new Trigger_Framework_Mock__c(name='test'));
         
@@ -169,23 +169,44 @@ public class TriggerDispatcherTest {
         TriggerDispatcher.mockNew = testData;
         
         Test.StartTest();
-        TriggerDispatcher.run(Trigger_Framework_Mock__c.SObjectType);
+        TriggerDispatcher.run();
         
         Test.StopTest();
         System.Assert(true,'Expected to reach this line');
     }
     
-    public static testmethod void testRunSObjectTypePassedBad() {
+    public static testmethod void testRunUnmocked() {
         List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
         testData.add(new Trigger_Framework_Mock__c(name='test'));
         
-        TriggerDispatcher.enableRunMocking=true;
+        TriggerDispatcher.enableRunMocking=false;
         TriggerDispatcher.mockNew=testData;
         
         Test.StartTest();
 
         try {
-            TriggerDispatcher.validateSObjectTypeMatch(testData, Account.SObjectType); 
+            TriggerDispatcher.run(); 
+            System.Assert(false,'Must not reach this line');
+        } catch (DesignByContractUtil.DBCAssertionException dbcex) {
+            System.Debug(dbcex.getMessage());
+            System.Assert(true,'Expected to reach this line');    
+        }
+        
+        Test.StopTest();
+    }
+    public static testmethod void testRunNonTriggerContextUnmocked() {
+        List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
+        testData.add(new Trigger_Framework_Mock__c(name='test'));
+        
+        System.Assert(!Trigger.isExecuting,'Test is invalid if executing in a Trigger context');
+        
+        TriggerDispatcher.enableRunMocking=false;
+        TriggerDispatcher.mockNew=testData;
+        
+        Test.StartTest();
+
+        try {
+            TriggerDispatcher.run(); 
             System.Assert(false,'Must not reach this line');
         } catch (DesignByContractUtil.DBCAssertionException dbcex) {
             System.Debug(dbcex.getMessage());

@@ -11,26 +11,32 @@ public with sharing class TriggerDispatcher {
     private static List<SObject> mockOld=null;
     
     /**
-     * General entrypoint for Apex Triggers.  Simply pass in the SObjectType for 
+     * General entrypoint for Apex Triggers.  For 
      * Standard Objects, Custom Objects, or Platform Events
      * This entrypoint will instantiate the correct Handler
      **/ 
-    public static void run(final Schema.SObjectType sobjectType) {
+    public static void run() {
         try {
-            DesignByContractUtil.assertNotEquals(null,sobjectType,'SObjectType is required!');
-            
-            // Avoid cut & paste errors in the calling trigger
-            if (Trigger.isExecuting || enableRunMocking) { 
-                validateSObjectTypeMatch(Trigger.isExecuting ? Trigger.new : mockNew,sobjectType); 
-            }            
-            
+                        
             // Instantiate the correct standard handler based on SObjectType
-            final ITriggerHandler handler =  TriggerHandlerFactory.getInstance(sobjectType);
+            final ITriggerHandler handler =  TriggerHandlerFactory.getInstance(getSObjectTypeFromTriggerContext());
 
             run(handler);
             
         } catch (Exception ex) { LoggingUtility.logError(ex,true); throw(ex); } // Log and rethrow unhandled exceptions
-   }
+    }
+    
+    /**
+     * Detect the correct SObjectType by examining the TriggerContext
+     * Trigger.New is always populated for all phases when the trigger is executing
+     * For Unit testing, allow the collection to be mocked
+     **/ 
+    public static Schema.SObjectType getSObjectTypeFromTriggerContext() {
+        final List<SObject> effectiveNewCollection =  Trigger.isExecuting ? Trigger.new : mockNew;
+        DesignByContractUtil.assertNotEquals(null,effectiveNewCollection,'Trigger.New must be valid or mocked');
+        DesignByContractUtil.assert(!effectiveNewCollection.isEmpty(),'Trigger.New must have atleast one value');
+        return effectiveNewCollection[0].getSObjectType();
+    }
     
     public static void validateSObjectTypeMatch(final List<SObject> triggerNewCollection, final Schema.SObjectType passedType) {
         DesignByContractUtil.assertEquals(triggerNewCollection[0].getSObjectType(),passedType, 'Configuration error, trigger SObjectType incorrect!');
