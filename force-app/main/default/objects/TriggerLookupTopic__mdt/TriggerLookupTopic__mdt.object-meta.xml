@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Defines queries for related data that the Trigger Helper classes will use to process records.
+Each row defines a Topic which will be passed a set of keys and expected to return the needed fields in bulk for all rows in the current Trigger execution.   Examples:  Account, Contact, User, Group, Case (parent).
+Special handling is required for Queries that return collections such as:  Child Cases,  CaseComments,  CaseMilestones.</description>
+    <label>TriggerLookupTopic</label>
+    <pluralLabel>TriggerLookupTopics</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

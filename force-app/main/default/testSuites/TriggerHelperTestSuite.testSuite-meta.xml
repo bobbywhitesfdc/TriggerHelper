@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexTestSuite xmlns="http://soap.sforce.com/2006/04/metadata">
+    <testClassName>AbstractBasePETriggerHelperTest</testClassName>
+    <testClassName>AbstractBaseTriggerHandlerTest</testClassName>
+    <testClassName>AbstractBaseTriggerHelperTest</testClassName>
+    <testClassName>DesignByContractUtilTest</testClassName>
+    <testClassName>LoggingUtilityTest</testClassName>
+    <testClassName>LookupDataHandlerTest</testClassName>
+    <testClassName>QueryTopicFactoryTest</testClassName>
+    <testClassName>StandardPlatformEventTriggerHandlerTest</testClassName>
+    <testClassName>StandardSObjectTriggerHandlerTest</testClassName>
+    <testClassName>TriggerDispatcherTest</testClassName>
+    <testClassName>TriggerDMLHandlerTest</testClassName>
+    <testClassName>TriggerHelperFactoryTest</testClassName>
+</ApexTestSuite>

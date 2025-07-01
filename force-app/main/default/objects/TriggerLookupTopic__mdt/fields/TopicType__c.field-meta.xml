@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>TopicType__c</fullName>
+    <defaultValue>&quot;Detail&quot;</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Detail Topics return a single row
+RelatedList topics return a collection of 0..n rows.</description>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Topic Type</label>
+    <required>true</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Detail</fullName>
+                <default>true</default>
+                <label>Detail</label>
+            </value>
+            <value>
+                <fullName>RelatedList</fullName>
+                <default>false</default>
+                <label>RelatedList</label>
+            </value>
+            <value>
+                <fullName>ExternalId</fullName>
+                <default>false</default>
+                <label>ExternalId</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

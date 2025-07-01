@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NonProductionTopics</fullName>
+    <columns>DeveloperName</columns>
+    <columns>MasterLabel</columns>
+    <columns>Context__c</columns>
+    <columns>Topic__c</columns>
+    <columns>SObjectTypeName__c</columns>
+    <columns>TopicType__c</columns>
+    <columns>QueryTemplate__c</columns>
+    <columns>KeyFieldname__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Context__c</field>
+        <operation>notEqual</operation>
+        <value>Production</value>
+    </filters>
+    <label>Non-Production Topics</label>
+</ListView>

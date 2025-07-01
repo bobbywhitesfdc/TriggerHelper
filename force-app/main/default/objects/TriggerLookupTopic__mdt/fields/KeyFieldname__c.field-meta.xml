@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>KeyFieldname__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Key Fieldname is required for &apos;Related&apos; queries that return more than 1 record per input key.  Key fieldname is used to group records.   Example (WhatId):  [Select Id, WhatId, Subject From Task where WhatId in :keySet]</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>KeyFieldname</label>
+    <length>80</length>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

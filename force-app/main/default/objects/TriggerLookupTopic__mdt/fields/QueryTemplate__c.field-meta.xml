@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>QueryTemplate__c</fullName>
+    <deprecated>false</deprecated>
+    <description>The query with host variable marker included.   Query FROM Object must match the SObjectType of this record.   For nested queries, use the parent object.   Examples:
+Select Id, Name, RecordTypeId, RecordType.Name From Account Where Id in :keySet
+select id, subject, status from Case Where Id in :keySet
+SELECT (SELECT Id,parentId,commentBody,createdDate,SystemModStamp 
+                                                         From CaseComments 
+                                                         ORDER BY SystemModStamp DESC LIMIT 1) 
+                                                 FROM Case Where Id IN: keySet</description>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <label>QueryTemplate</label>
+    <length>1024</length>
+    <type>LongTextArea</type>
+    <visibleLines>5</visibleLines>
+</CustomField>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bypass_GenesyspsExperience_Trigger__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Set to TRUE if you want to bypass GenesyspsExperience trigger execution</description>
+    <inlineHelpText>Set to TRUE if you want to bypass GenesyspsExperience trigger execution</inlineHelpText>
+    <label>Bypass GenesyspsExperience Trigger</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

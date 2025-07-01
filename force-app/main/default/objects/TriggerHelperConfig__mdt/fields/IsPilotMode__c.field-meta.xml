@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>IsPilotMode__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Is this Helper deployed in Pilot mode?  If YES, then Users require the accompanying Feature Flag to execute this Helper.   If No, then the Helper is considered Generally Available and all users should execute this Helper.
+Pilot users should be assigned the included PermissionSet.</description>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <label>IsPilotMode</label>
+    <type>Checkbox</type>
+</CustomField>

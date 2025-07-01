@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Bypass_AccountNote_Trigger__c</fullName>
+    <defaultValue>false</defaultValue>
+    <deprecated>false</deprecated>
+    <description>Set to TRUE if you want to bypass Account Note trigger execution</description>
+    <inlineHelpText>Set to TRUE if you want to bypass Account Note trigger execution</inlineHelpText>
+    <label>Bypass AccountNote Trigger</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

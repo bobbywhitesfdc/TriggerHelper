@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Mock Platform Event used to test the TriggerFramework DML capabilities without introducing external dependencies.  Used for unit tests only.</description>
+    <eventType>HighVolume</eventType>
+    <label>TriggerMockPE</label>
+    <pluralLabel>TriggerMockPEs</pluralLabel>
+    <publishBehavior>PublishAfterCommit</publishBehavior>
+</CustomObject>

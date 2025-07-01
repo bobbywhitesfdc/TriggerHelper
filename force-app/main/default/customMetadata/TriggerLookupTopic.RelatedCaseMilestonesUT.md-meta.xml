@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>RelatedCaseMilestones Unit Test</label>
+    <protected>false</protected>
+    <values>
+        <field>Context__c</field>
+        <value xsi:type="xsd:string">UnitTest</value>
+    </values>
+    <values>
+        <field>KeyFieldname__c</field>
+        <value xsi:type="xsd:string">CaseId</value>
+    </values>
+    <values>
+        <field>QueryTemplate__c</field>
+        <value xsi:type="xsd:string">SELECT Id 
+FROM CaseMilestone 
+WHERE IsCompleted = false 
+AND CaseId in :keySet</value>
+    </values>
+    <values>
+        <field>SObjectTypeName__c</field>
+        <value xsi:type="xsd:string">CaseMilestone</value>
+    </values>
+    <values>
+        <field>TopicType__c</field>
+        <value xsi:type="xsd:string">RelatedList</value>
+    </values>
+    <values>
+        <field>Topic__c</field>
+        <value xsi:type="xsd:string">RelatedCaseMilestones</value>
+    </values>
+</CustomMetadata>

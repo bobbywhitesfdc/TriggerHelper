@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Product Unit Test XID</label>
+    <protected>false</protected>
+    <values>
+        <field>Context__c</field>
+        <value xsi:type="xsd:string">UnitTest</value>
+    </values>
+    <values>
+        <field>KeyFieldname__c</field>
+        <value xsi:type="xsd:string">StockKeepingUnit</value>
+    </values>
+    <values>
+        <field>QueryTemplate__c</field>
+        <value xsi:type="xsd:string">Select Id,StockKeepingUnit 
+From Product2 
+Where StockKeepingUnit in :keySet</value>
+    </values>
+    <values>
+        <field>SObjectTypeName__c</field>
+        <value xsi:type="xsd:string">Asset</value>
+    </values>
+    <values>
+        <field>TopicType__c</field>
+        <value xsi:type="xsd:string">ExternalId</value>
+    </values>
+    <values>
+        <field>Topic__c</field>
+        <value xsi:type="xsd:string">Products</value>
+    </values>
+</CustomMetadata>

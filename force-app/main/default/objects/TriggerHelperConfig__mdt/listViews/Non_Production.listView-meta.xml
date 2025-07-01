@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Non_Production</fullName>
+    <columns>DeveloperName</columns>
+    <columns>MasterLabel</columns>
+    <columns>Context__c</columns>
+    <columns>SObjectType__c</columns>
+    <columns>HelperClassName__c</columns>
+    <columns>Enabled__c</columns>
+    <columns>IsPilotMode__c</columns>
+    <columns>ExecutionSequence__c</columns>
+    <columns>RelatedFlows__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Context__c</field>
+        <operation>notEqual</operation>
+        <value>Production</value>
+    </filters>
+    <label>Non-Production Helpers</label>
+</ListView>

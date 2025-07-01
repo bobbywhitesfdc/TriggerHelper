@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RelatedFlows__c</fullName>
+    <deprecated>false</deprecated>
+    <description>List of 1 or more Flow names that relate to this Helper.  These flows must be deactivated if this helper is active.  If this helper is deactivated, the Flow must be reactivated.   You may put notes in this field.</description>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Related Flows</label>
+    <required>true</required>
+    <type>TextArea</type>
+</CustomField>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Bad Config not ITriggerHelper</label>
+    <protected>false</protected>
+    <values>
+        <field>AlternateSObject__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Context__c</field>
+        <value xsi:type="xsd:string">FactoryTest2</value>
+    </values>
+    <values>
+        <field>Enabled__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>ExecutionSequence__c</field>
+        <value xsi:type="xsd:double">4.0</value>
+    </values>
+    <values>
+        <field>HelperClassName__c</field>
+        <value xsi:type="xsd:string">TriggerHelperFactory</value>
+    </values>
+    <values>
+        <field>IsPilotMode__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>RelatedFlows__c</field>
+        <value xsi:type="xsd:string">NA - TriggerHelperFactory Negative Test.</value>
+    </values>
+    <values>
+        <field>SObjectType__c</field>
+        <value xsi:type="xsd:string">Trigger_Framework_Mock__c</value>
+    </values>
+</CustomMetadata>

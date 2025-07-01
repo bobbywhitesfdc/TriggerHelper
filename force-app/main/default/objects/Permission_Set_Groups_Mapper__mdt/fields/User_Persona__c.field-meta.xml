@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>User_Persona__c</fullName>
+    <deprecated>false</deprecated>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>User Persona</label>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Knowledge Administrator</fullName>
+                <default>false</default>
+                <label>Knowledge Administrator</label>
+            </value>
+            <value>
+                <fullName>Knowledge Editor</fullName>
+                <default>false</default>
+                <label>Knowledge Editor</label>
+            </value>
+            <value>
+                <fullName>Knowledge Publisher</fullName>
+                <default>false</default>
+                <label>Knowledge Publisher</label>
+            </value>
+            <value>
+                <fullName>Wisely Agent</fullName>
+                <default>false</default>
+                <label>Wisely Agent</label>
+            </value>
+            <value>
+                <fullName>Wisely Supervisor</fullName>
+                <default>false</default>
+                <label>Wisely Supervisor</label>
+            </value>
+            <value>
+                <fullName>SBS Agent</fullName>
+                <default>false</default>
+                <label>SBS Agent</label>
+            </value>
+            <value>
+                <fullName>SBS Supervisor</fullName>
+                <default>false</default>
+                <label>SBS Supervisor</label>
+            </value>
+            <value>
+                <fullName>ADP Enterprise Associate</fullName>
+                <default>false</default>
+                <label>ADP Enterprise Associate</label>
+            </value>
+            <value>
+                <fullName>ADP Enterprise Manager</fullName>
+                <default>false</default>
+                <label>ADP Enterprise Manager</label>
+            </value>
+            <value>
+                <fullName>ADP Enterprise Ops-Admin</fullName>
+                <default>false</default>
+                <label>ADP Enterprise Ops-Admin</label>
+            </value>
+            <value>
+                <fullName>Coso Tax Processing Associate</fullName>
+                <default>false</default>
+                <label>Coso Tax Processing Associate</label>
+            </value>
+            <value>
+                <fullName>Coso Tax Processing Manager</fullName>
+                <default>false</default>
+                <label>Coso Tax Processing Manager</label>
+            </value>
+            <value>
+                <fullName>Lyric Implementation User</fullName>
+                <default>false</default>
+                <label>Lyric Implementation User</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

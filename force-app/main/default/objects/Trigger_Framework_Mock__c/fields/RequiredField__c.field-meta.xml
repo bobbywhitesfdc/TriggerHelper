@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>RequiredField__c</fullName>
+    <deprecated>false</deprecated>
+    <description>Omitting a value can be used to force a test failure</description>
+    <externalId>false</externalId>
+    <label>RequiredField</label>
+    <length>255</length>
+    <required>true</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>
