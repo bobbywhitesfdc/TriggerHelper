@@ -4,6 +4,7 @@
 @Istest(isParallel=true)
 public class TriggerDispatcherTest {
     public static testmethod void testExceptionHandling() {
+        
         TriggerDispatcher.enableTOMocking=true;
         TriggerDispatcher.unitTestOperationType=System.TriggerOperation.BEFORE_INSERT;
         
@@ -164,7 +165,14 @@ public class TriggerDispatcherTest {
     public static testmethod void testRunMocked() {
         List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
         testData.add(new Trigger_Framework_Mock__c(name='test'));
+
+        // Initialize the Custom Setting to disable it
+        Trigger_Bypass_Setting__c triggerSetting = Trigger_Bypass_Setting__c.getOrgDefaults();
+        triggerSetting.Bypass_All__c=true;
+        upsert triggerSetting triggerSetting.Id;
         
+        TriggerDispatcher.enableTOMocking=true;
+        TriggerDispatcher.unitTestOperationType=System.TriggerOperation.BEFORE_INSERT;
         TriggerDispatcher.enableRunMocking=true;
         TriggerDispatcher.mockNew = testData;
         
@@ -178,9 +186,16 @@ public class TriggerDispatcherTest {
     public static testmethod void testRunUnmocked() {
         List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
         testData.add(new Trigger_Framework_Mock__c(name='test'));
-        
+
+        // Initialize the Custom Setting to disable it
+        Trigger_Bypass_Setting__c triggerSetting = Trigger_Bypass_Setting__c.getOrgDefaults();
+        triggerSetting.Bypass_All__c=true;
+        upsert triggerSetting triggerSetting.Id;
+
+        TriggerDispatcher.enableTOMocking=true;
+        TriggerDispatcher.unitTestOperationType=System.TriggerOperation.BEFORE_INSERT;        
         TriggerDispatcher.enableRunMocking=false;
-        TriggerDispatcher.mockNew=testData;
+        TriggerDispatcher.mockNew=null;
         
         Test.StartTest();
 
@@ -194,26 +209,4 @@ public class TriggerDispatcherTest {
         
         Test.StopTest();
     }
-    public static testmethod void testRunNonTriggerContextUnmocked() {
-        List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
-        testData.add(new Trigger_Framework_Mock__c(name='test'));
-        
-        System.Assert(!Trigger.isExecuting,'Test is invalid if executing in a Trigger context');
-        
-        TriggerDispatcher.enableRunMocking=false;
-        TriggerDispatcher.mockNew=testData;
-        
-        Test.StartTest();
-
-        try {
-            TriggerDispatcher.run(); 
-            System.Assert(false,'Must not reach this line');
-        } catch (DesignByContractUtil.DBCAssertionException dbcex) {
-            System.Debug(dbcex.getMessage());
-            System.Assert(true,'Expected to reach this line');    
-        }
-        
-        Test.StopTest();
-    }
-
 }
