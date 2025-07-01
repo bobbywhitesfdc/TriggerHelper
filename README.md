@@ -29,7 +29,7 @@ public class MyFirstAccountHelper extends AbstractBaseTriggerHelper implements I
 }
 ```
 3) Create a Custom Metadata Type record configuration (TriggerHelperConfig_mdt)
-  a) Configure the object (Account)
-  b) Set the HelperClass name to your helper (MyFirstAccountHelper)
-  c) Set the Execution Order to 1
-  d) Enable it
+ - Configure the object (Account)
+ - Set the HelperClass name to your helper (MyFirstAccountHelper)
+ - Set the Execution Order to 1
+ - Enable it
