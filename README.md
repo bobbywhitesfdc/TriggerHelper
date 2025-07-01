@@ -8,7 +8,7 @@ TriggerDispatcher.run(Account.SObjectType);
 
 2) Create your first helper Apex Class by Subclassing  AbstractBaseTriggerHelper
 (Override methods only as needed for your use case)
-
+```
 /**
  * Mock Helper class for testing the HappyPath for DML of the MockTriggerHandler
  **/ 
@@ -27,7 +27,7 @@ public class MyFirstAccountHelper extends AbstractBaseTriggerHelper implements I
     }
         
 }
-
+```
 3) Create a Custom Metadata Type record configuration (TriggerHelperConfig_mdt)
   a) Configure the object (Account)
   b) Set the HelperClass name to your helper (MyFirstAccountHelper)
