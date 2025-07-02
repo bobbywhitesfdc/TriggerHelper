@@ -3,9 +3,5 @@
  **/ 
 @isTest
 public with sharing class MockHelperHappyPath extends MockITriggerHelper implements ITriggerHelper {
-
-    public String getName() {
-        return MockHelperHappyPath.class.getName();
-    }
-   
+  
 }

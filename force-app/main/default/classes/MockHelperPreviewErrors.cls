@@ -5,10 +5,6 @@
  **/ 
 @isTest
 public class MockHelperPreviewErrors extends MockITriggerHelper implements ITriggerHelper {
-
-    public String getName() {
-        return MockHelperPreviewErrors.class.getName();
-    }
     
     public override void previewBeforeInsert(final SObject record) {
         System.AssertNotEquals(null,record,'previewBeforeInsert expects a non-null input');

@@ -3,13 +3,6 @@
  **/ 
 @isTest
 public class MockHelperHappyDML extends MockITriggerHelper implements ITriggerHelper {
-
-    public MockHelperHappyDML() {
-    }
-    
-    public String getName() {
-        return MockHelperHappyDML.class.getName();
-    }
     
     /**
      * Insert a task for each Trigger_Framework_Mock__c to test the INSERT DML function.

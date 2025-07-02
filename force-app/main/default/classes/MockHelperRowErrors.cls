@@ -5,9 +5,6 @@
  **/
 @isTest
 public class MockHelperRowErrors extends MockITriggerHelper implements ITriggerHelper {
-    public String getName() {
-        return MockHelperRowErrors.class.getName();
-    }
     
     public override void processRecordBeforeInsert(final SObject record) {
         System.AssertNotEquals(null,record,'processRecordBeforeInsert expects a non-null input');

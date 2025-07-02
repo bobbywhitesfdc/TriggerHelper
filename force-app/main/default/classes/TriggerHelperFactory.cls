@@ -64,7 +64,9 @@ public inherited sharing class TriggerHelperFactory {
                 
                 if (helperClass==null) throw new IllegalArgumentException('Invalid classname:' + currentHelper);
                 
-                helpers.add((ITriggerHelper)helperClass.newInstance());
+                final ITriggerHelper helperInstance = (ITriggerHelper)helperClass.newInstance();
+                helperInstance.setName(currentHelper);
+                helpers.add(helperInstance);
             } catch (Exception ex) {
                 LoggingUtility.logError(ex, true);
                 throw ex;

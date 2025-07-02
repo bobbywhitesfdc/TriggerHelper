@@ -6,9 +6,6 @@
 @IsTest
 public class MockITriggerHelperGenErrors extends MockITriggerHelper implements ITriggerHelper {
     
-    public String getName() {
-        return MockITriggerHelperGenErrors.class.getName();
-    }
      /**
      * called after all of the records have been processed in Pass 1
      * Helpers can perform full collection tasks here like publishing Platform events

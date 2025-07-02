@@ -3,9 +3,6 @@
 **/
 @IsTest
 public class MockPEHelper extends AbstractBasePETriggerHelper {
-        public String getName() {
-            return MockPEHelper.class.getName();
-        }
         public Boolean bFinalizeAfterInsert=false;
         public Integer cPreviewAfterInsert=0;
         public Integer cMeetsAfterInsert=0;

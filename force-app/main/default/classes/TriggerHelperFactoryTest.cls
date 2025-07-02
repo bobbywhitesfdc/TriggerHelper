@@ -112,12 +112,15 @@ public class TriggerHelperFactoryTest {
      * That the helpers that are enabled can be instantiated
      **/ 
     public static testmethod void validateResultsForTriggerFrameworkMock() {
+        TriggerHelperFactory.factoryContext='TestHappyPath'; // Unit Test mode
         try {
             final List<ITriggerHelper> results = TriggerHelperFactory.getHelpers('Trigger_Framework_Mock__c');
             System.AssertNotEquals(null,results,'Result cannot be null');
+            System.Assert(!results.isEmpty(),'Must have a configured helper!');
             for(ITriggerHelper current : results) {
                 System.AssertNotEquals(null,current,'Result entry must not be null');
                 System.debug('Helper:' + current.getName());
+                System.AssertNotEquals(null,current.getName(),'Name must be initialized');
             }     
         } catch (System.TypeException tex) {
             System.Assert(false,'Configuration issue -- Trigger_Framework_Mock__c Helpers must be upgraded to ITriggerHelper interface: ' + tex.getMessage());

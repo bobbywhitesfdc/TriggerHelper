@@ -7,6 +7,18 @@
 public class AbstractBaseTriggerHelperTest {
     public static final String NOOPMSG = 'No-op method implementation';
     
+    public static testmethod void testSetGetName() {
+        final MockAbstractBaseTriggerHelper mock = new MockAbstractBaseTriggerHelper();
+        final String helperClassname=MockAbstractBaseTriggerHelper.Class.getName();
+        
+        Test.StartTest();
+        mock.setName(helperClassname);
+        
+        Test.StopTest();
+        System.AssertEquals(helperClassname,mock.getName(),'getName must equal setName');
+        
+    }
+    
     public static testmethod void testSetGetDMLHandler() {
         final MockAbstractBaseTriggerHelper mock = new MockAbstractBaseTriggerHelper();
         final TriggerDMLHandler dmlHandler = new TriggerDMLHandler();
@@ -82,9 +94,8 @@ public class AbstractBaseTriggerHelperTest {
     }
     
     public class MockAbstractBaseTriggerHelper extends AbstractBaseTriggerHelper {
-        /* Unused but required methods from ITriggerHelper interface */
-        public String getName() { return MockAbstractBaseTriggerHelper.class.getName(); }
     }
+    
     public static testmethod void testPreviewBeforeInsert() {
         final ITriggerHelper helper = new MockAbstractTriggerHelper();
         final SObject current = new Trigger_Framework_Mock__c();
@@ -374,9 +385,6 @@ public class AbstractBaseTriggerHelperTest {
      * MockNoOverride -- This mock doesn't override anything it doesn't have to
      **/
     public class MockAbstractNoOverrides extends AbstractBaseTriggerHelper {
-        
-        // Required, but not tested by this class
-        public String getName() { return MockAbstractNoOverrides.class.getName(); }
     }
     
     /**
@@ -384,10 +392,7 @@ public class AbstractBaseTriggerHelperTest {
       * 
      **/
     public class MockAbstractTriggerHelper extends AbstractBaseTriggerHelper {
-        
-        // Required, but not tested by this class
-        public String getName() { return MockAbstractTriggerHelper.class.getName(); }
-        
+                
         @Testvisible Boolean previewBeforeInsertCalled=false;
         public override void previewBeforeInsert(final SObject current) {
             System.Debug('previewBeforeInsert(Trigger_Framework_Mock__c) called');

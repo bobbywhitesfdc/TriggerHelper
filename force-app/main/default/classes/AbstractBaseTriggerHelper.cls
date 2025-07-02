@@ -6,6 +6,7 @@ public abstract class AbstractBaseTriggerHelper implements ITriggerHelper {
     
     private LookupDataHandler dataHandler=null;
     private TriggerDMLHandler dmlHandler=null;
+    private String helperClassName=null;
     
     /**
      * Default constructor
@@ -14,6 +15,22 @@ public abstract class AbstractBaseTriggerHelper implements ITriggerHelper {
         dataHandler=null;
         dmlHandler=null;
     }
+    
+    /**
+     * For debugging, give the name of the class implementing the ITriggerHelper interface
+     * By declaring this public and non-virtual, we prevent helpers from overriding this implementation
+     **/ 
+    public String getName() {
+        return helperClassName;
+    }
+    
+    /** 
+     * For debugging, allow the TriggerHelper factory to set the helper name from configuration
+     **/
+    public void setName(final String helperClassName) {
+        this.helperClassName=helperClassName;
+    }
+
     
     /**
      * Get the data handler

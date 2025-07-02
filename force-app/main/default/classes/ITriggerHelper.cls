@@ -9,6 +9,12 @@ public Interface ITriggerHelper {
      * For debugging, give the name of the class implementing the ITriggerHelper interface
      **/ 
     String getName();
+    
+    /** 
+     * For debugging, allow the TriggerHelper factory to set the helper name from configuration
+     **/
+    void setName(final String helperClassName);
+    
     /**
      * Set the data handler for bulk operations
      **/  
