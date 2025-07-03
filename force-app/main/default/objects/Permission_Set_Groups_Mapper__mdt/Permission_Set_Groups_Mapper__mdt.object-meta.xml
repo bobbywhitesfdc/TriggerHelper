@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
-    <description>Used to assign Permission set groups by persona</description>
-    <label>Permission Set Groups Mapper</label>
-    <pluralLabel>Permission Set Groups Mapper</pluralLabel>
-    <visibility>Public</visibility>
-</CustomObject>

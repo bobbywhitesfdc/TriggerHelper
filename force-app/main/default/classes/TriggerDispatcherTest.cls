@@ -162,7 +162,7 @@ public class TriggerDispatcherTest {
         Test.StopTest();
     }
     
-    public static testmethod void testRunMocked() {
+    public static testmethod void testRunMockedInsert() {
         List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
         testData.add(new Trigger_Framework_Mock__c(name='test'));
 
@@ -183,7 +183,28 @@ public class TriggerDispatcherTest {
         System.Assert(true,'Expected to reach this line');
     }
     
-    public static testmethod void testRunUnmocked() {
+    public static testmethod void testRunMockedDelete() {
+        List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
+        testData.add(new Trigger_Framework_Mock__c(name='test'));
+
+        // Initialize the Custom Setting to disable it
+        Trigger_Bypass_Setting__c triggerSetting = Trigger_Bypass_Setting__c.getOrgDefaults();
+        triggerSetting.Bypass_All__c=true;
+        upsert triggerSetting triggerSetting.Id;
+        
+        TriggerDispatcher.enableTOMocking=true;
+        TriggerDispatcher.unitTestOperationType=System.TriggerOperation.BEFORE_DELETE;
+        TriggerDispatcher.enableRunMocking=true;
+        TriggerDispatcher.mockOld = testData;
+        
+        Test.StartTest();
+        TriggerDispatcher.run();
+        
+        Test.StopTest();
+        System.Assert(true,'Expected to reach this line');
+    }
+    
+    public static testmethod void testRunUnmockedInsert() {
         List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
         testData.add(new Trigger_Framework_Mock__c(name='test'));
 
@@ -209,4 +230,33 @@ public class TriggerDispatcherTest {
         
         Test.StopTest();
     }
+    
+    public static testmethod void testRunUnmockedDelete() {
+        List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
+        testData.add(new Trigger_Framework_Mock__c(name='test'));
+
+        // Initialize the Custom Setting to disable it
+        Trigger_Bypass_Setting__c triggerSetting = Trigger_Bypass_Setting__c.getOrgDefaults();
+        triggerSetting.Bypass_All__c=true;
+        upsert triggerSetting triggerSetting.Id;
+
+        TriggerDispatcher.enableTOMocking=true;
+        TriggerDispatcher.unitTestOperationType=System.TriggerOperation.BEFORE_DELETE;        
+        TriggerDispatcher.enableRunMocking=false;
+        TriggerDispatcher.mockNew=null;
+        TriggerDispatcher.mockOld=null;
+        
+        Test.StartTest();
+
+        try {
+            TriggerDispatcher.run(); 
+            System.Assert(false,'Must not reach this line');
+        } catch (DesignByContractUtil.DBCAssertionException dbcex) {
+            System.Debug(dbcex.getMessage());
+            System.Assert(true,'Expected to reach this line');    
+        }
+        
+        Test.StopTest();
+    }
+    
 }

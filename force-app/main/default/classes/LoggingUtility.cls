@@ -2,6 +2,19 @@
 * Log Application Errors asynchronously using Nebula logger package.
 */
 public class LoggingUtility {
+
+    /**
+     * Logs an error message and saves the log based on the provided saveFlag.
+     *
+     * @param msg      The error message to log.
+     * @param saveFlag Determines whether to save the log or not.
+     */
+    public static void info(String msg, Boolean saveFlag) {
+        Logger.info(msg);
+        if (saveFlag) {
+            Logger.saveLog();
+        }
+    }
     
     /**
      * Logs an error message and saves the log based on the provided saveFlag.

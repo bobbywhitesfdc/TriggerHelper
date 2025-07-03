@@ -55,6 +55,39 @@ private class LoggingUtilityTest {
     }
     
     /**
+     * Tests logging an error message with saveFlag set to false.
+     */
+    @isTest
+    static void testLogInfoWithSaveFlagFalse() {
+        // Test setup
+        Test.startTest();
+        
+        // Perform action
+        LoggingUtility.info('Test info message', false);
+        
+        // Test validation
+        Test.stopTest();
+    }
+    
+    /**
+     * Tests logging an error message with saveFlag set to true.
+     */
+    @isTest
+    static void testLogInfoWithSaveFlagTrue() {
+        // Test setup
+        Test.startTest();
+        
+        // Perform action
+        LoggingUtility.info('Test info message', true);
+        MockLogger mockLogger = new MockLogger();
+        mockLogger.saveLog();
+        
+        // Test validation
+        Test.stopTest();
+        System.assert(!mockLogger.logEntries.isEmpty(), 'Log entry should be created when saveFlag is true');
+    }
+    
+    /**
      * Tests logging an error message with an exception and saveFlag set to true.
      */
     @isTest

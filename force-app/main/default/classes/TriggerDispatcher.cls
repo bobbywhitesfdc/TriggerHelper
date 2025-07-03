@@ -32,10 +32,29 @@ public with sharing class TriggerDispatcher {
      * For Unit testing, allow the collection to be mocked
      **/ 
     public static Schema.SObjectType getSObjectTypeFromTriggerContext() {
-        final List<SObject> effectiveNewCollection =  Trigger.isExecuting ? Trigger.new : mockNew;
-        DesignByContractUtil.assertNotEquals(null,effectiveNewCollection,'Trigger.New must be valid or mocked');
-        DesignByContractUtil.assert(!effectiveNewCollection.isEmpty(),'Trigger.New must have atleast one value');
-        return effectiveNewCollection[0].getSObjectType();
+        List<SObject> effectiveTypeCollection;
+        if (Trigger.isExecuting || enableRunMocking) {
+            system.debug('Trigger Operation:' + getTriggerOperationType());
+            switch on (getTriggerOperationType()) {
+                when BEFORE_DELETE{
+                    // For Delete, only Trigger.Old is populated
+                    effectiveTypeCollection= Trigger.isExecuting ? Trigger.Old : mockOld;
+                }
+                when AFTER_DELETE{
+                    // For Delete, only Trigger.Old is populated
+                    effectiveTypeCollection= Trigger.isExecuting ? Trigger.Old : mockOld;
+                }
+                when else {
+                    // Valid for all other operation types:  INSERT, UPDATE, UNDELETE
+                    effectiveTypeCollection= Trigger.isExecuting ? Trigger.New : mockNew;
+                } 
+            }                    
+        } else {
+            DesignByContractUtil.assert(false,'TriggerDispatcher can only execute in a Trigger context');
+        }
+        DesignByContractUtil.assertNotEquals(null,effectiveTypeCollection,'typeCollection must be valid or mocked. Trigger.isExecuting? ' + Trigger.isExecuting);
+        DesignByContractUtil.assert(!effectiveTypeCollection.isEmpty(),'typeCollection must have atleast one value');
+        return effectiveTypeCollection[0].getSObjectType();
     }
     
     public static void validateSObjectTypeMatch(final List<SObject> triggerNewCollection, final Schema.SObjectType passedType) {
@@ -46,7 +65,10 @@ public with sharing class TriggerDispatcher {
      * Explicit entrypoint if a specialized handler is required
      **/ 
     public static void run(ITriggerHandler handler){
-       try {
+       LoggingUtility.info('Trigger.operation: ' + getTriggerOperationType(),true);
+       LoggingUtility.info('Trigger.sobjecttype: ' + getSObjectTypeFromTriggerContext(),true);
+
+        try {
             /**
              * Short circuit if the handler is disabled
              **/ 

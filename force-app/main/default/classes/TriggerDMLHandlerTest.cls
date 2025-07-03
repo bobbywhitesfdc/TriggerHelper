@@ -14,6 +14,15 @@ public class TriggerDMLHandlerTest {
         return Math.Mod(n,2) != 0;
     }
 
+    public static void setBypass(final Boolean value) {
+        /**
+         * Disable the trigger framework by bypassing all triggers for these DML tests
+         **/
+        Trigger_Bypass_Setting__c bypassSetting = Trigger_Bypass_Setting__c.getInstance(UserInfo.getUserId());
+        bypassSetting.Bypass_All__c=value;
+        upsert bypassSetting;
+    }
+
     /**
      * Reproduce a problem seen in FIT  -- failure to Sort the Collection containing two or more different SObject Types:
      * See: https://stackoverflow.com/questions/22194740/system-typeexception-cannot-have-more-than-10-chunks-in-a-single-operation
@@ -28,6 +37,9 @@ public class TriggerDMLHandlerTest {
      * Trigger.CaseTrigger: line 3, column 1
      **/ 
     public static testmethod void stressfulMixedBatchInsert() {
+        // Bypass all Triggers for this test
+        setBypass(true);
+        
         final Integer MIXEDBATCHSIZE = 10; // Smallest batch to produce the error
         final TriggerDMLHandler dmlHandler = new TriggerDMLHandler();
         List<SObject> testData = new List<SObject>();
@@ -73,6 +85,9 @@ public class TriggerDMLHandlerTest {
      * Class.TriggerDMLHandler.updateObjects: line 136, column 1 
     **/ 
     public static testmethod void stressfulMixedBatchUpdate() {
+        // Bypass all Triggers for this test
+        setBypass(true);
+        
         final Integer MIXEDBATCHSIZE = 10; // Smallest batch to produce the error
         final TriggerDMLHandler dmlHandler = new TriggerDMLHandler();
         List<SObject> testData = new List<SObject>();
@@ -142,6 +157,9 @@ public class TriggerDMLHandlerTest {
      * Class.TriggerDMLHandler.updateObjects: line 136, column 1 
     **/ 
     public static testmethod void stressfulMixedBatchDelete() {
+        // Bypass all Triggers for this test
+        setBypass(true);
+        
         final Integer MIXEDBATCHSIZE = 10; // Smallest batch to produce the error
         final TriggerDMLHandler dmlHandler = new TriggerDMLHandler();
         List<SObject> testData = new List<SObject>();
@@ -211,6 +229,9 @@ public class TriggerDMLHandlerTest {
      * Class.TriggerDMLHandler.updateObjects: line 136, column 1 
     **/ 
     public static testmethod void stressfulMixedBatchUndelete() {
+        // Bypass all Triggers for this test
+        setBypass(true);
+        
         final Integer MIXEDBATCHSIZE = 10; // Smallest batch to produce the error
         final TriggerDMLHandler dmlHandler = new TriggerDMLHandler();
         List<SObject> testData = new List<SObject>();
@@ -700,6 +721,9 @@ public class TriggerDMLHandlerTest {
      * Ensure that INSERTS are committed to the database
      **/ 
     public static testmethod void applyInsertHappy() {
+        // Bypass all Triggers for this test
+        setBypass(true);
+        
         final TriggerDMLHandler handler = new TriggerDMLHandler();
         final List<Trigger_Framework_Mock__c> myTestRecords = new List<Trigger_Framework_Mock__c>();
         
@@ -725,6 +749,9 @@ public class TriggerDMLHandlerTest {
      * Ensure partial success semantics are followed
      **/ 
     public static testmethod void applyInsertErrorHandling() {
+        // Bypass all Triggers for this test
+        setBypass(true);
+        
         final TriggerDMLHandler handler = new TriggerDMLHandler();
         final List<Trigger_Framework_Mock__c> myTestRecords = new List<Trigger_Framework_Mock__c>();
         
@@ -763,6 +790,9 @@ public class TriggerDMLHandlerTest {
      * Ensure that Platform Events are published to the Eventbus
      **/ 
     public static testmethod void publishHappy() {
+        // Bypass all Triggers for this test
+        setBypass(true);
+        
         final TriggerDMLHandler handler = new TriggerDMLHandler();
         final List<TriggerMockPE__e> myTestRecords = new List<TriggerMockPE__e>();
           final TriggerMockPE__e  myMock = new TriggerMockPE__e(RequiredField__c='Populated');
@@ -822,6 +852,9 @@ public class TriggerDMLHandlerTest {
      * Ensure that UPSERT are committed to the database
      **/ 
     public static testmethod void applyUpsertHappy() {
+        // Bypass all Triggers for this test
+        setBypass(true);
+        
         final TriggerDMLHandler handler = new TriggerDMLHandler();
         final List<Trigger_Framework_Mock__c> myTestRecords = new List<Trigger_Framework_Mock__c>();
         
@@ -845,6 +878,9 @@ public class TriggerDMLHandlerTest {
      * Ensure that UPSERT are committed to the database
      **/ 
     public static testmethod void applyUpsertHappy2() {
+        // Bypass all Triggers for this test
+        setBypass(true);
+        
         final TriggerDMLHandler handler = new TriggerDMLHandler();
         final List<Trigger_Framework_Mock__c> myTestRecords = new List<Trigger_Framework_Mock__c>();
         
@@ -875,6 +911,9 @@ public class TriggerDMLHandlerTest {
      * Ensure that UPSERT with the Same key in a Single Batch will work
      **/ 
     public static testmethod void applyUpsertSameKey() {
+        // Bypass all Triggers for this test
+        setBypass(true);
+        
         final TriggerDMLHandler handler = new TriggerDMLHandler();
         final List<Trigger_Framework_Mock__c> myTestRecords = new List<Trigger_Framework_Mock__c>();
         
@@ -947,6 +986,9 @@ public class TriggerDMLHandlerTest {
      * Ensure that UPDATES are committed to the database
      **/ 
     public static testmethod void applyUpdateHappy() {
+        // Bypass all Triggers for this test
+        setBypass(true);
+        
         final TriggerDMLHandler handler = new TriggerDMLHandler();
         final List<Trigger_Framework_Mock__c> myTestRecords = new List<Trigger_Framework_Mock__c>();
         
@@ -985,6 +1027,9 @@ public class TriggerDMLHandlerTest {
      * ???Ensure partial success semantics are followed???
      **/ 
     public static testmethod void applyUpdateErrorHandling() {
+        // Bypass all Triggers for this test
+        setBypass(true);
+        
         final TriggerDMLHandler handler = new TriggerDMLHandler();
         final List<Trigger_Framework_Mock__c> myTestRecords = new List<Trigger_Framework_Mock__c>();
         
@@ -1029,6 +1074,9 @@ public class TriggerDMLHandlerTest {
      * Ensure that DELETES are committed to the database
      **/ 
     public static testmethod void applyDeleteHappy() {
+        // Bypass all Triggers for this test
+        setBypass(true);
+        
         final TriggerDMLHandler handler = new TriggerDMLHandler();
         final List<Trigger_Framework_Mock__c> myTestRecords = new List<Trigger_Framework_Mock__c>();
         
@@ -1043,6 +1091,7 @@ public class TriggerDMLHandlerTest {
         for (Trigger_Framework_Mock__c current : myTestRecords) {
             handler.addForDelete(current);
         }
+        
         
         Test.StartTest();
         
@@ -1108,6 +1157,9 @@ public class TriggerDMLHandlerTest {
      * Ensure that UNDELETES are committed to the database
      **/ 
     public static testmethod void applyUndeleteHappy() {
+        // Bypass all Triggers for this test
+        setBypass(true);
+        
         final TriggerDMLHandler handler = new TriggerDMLHandler();
         final List<Trigger_Framework_Mock__c> myTestRecords = new List<Trigger_Framework_Mock__c>();
         
@@ -1117,8 +1169,10 @@ public class TriggerDMLHandlerTest {
         }
         // We must insert these in order to be able to Delete them later
         // Deliberately not using the class under test to avoid double debugging work.
+        system.debug('Inserting test records');
         insert myTestRecords;
         
+        system.debug('Deleting test records');
         delete myTestRecords;
         
         for (Trigger_Framework_Mock__c current : myTestRecords) {
@@ -1127,6 +1181,7 @@ public class TriggerDMLHandlerTest {
         
         Test.StartTest();
         
+        system.debug('DMLHandler Undeleting test records');
         final List<Database.UndeleteResult> results = handler.undeleteObjects();
         
         Test.StopTest();
@@ -1147,6 +1202,8 @@ public class TriggerDMLHandlerTest {
      * Ensure partial success semantics are followed
      **/ 
     public static testmethod void applyUndeleteErrorHandling() {
+        // Bypass all Triggers for this test
+        setBypass(true);
         final TriggerDMLHandler handler = new TriggerDMLHandler(new MockDMLExecutor());
         final List<Trigger_Framework_Mock__c> myTestRecords = new List<Trigger_Framework_Mock__c>();
         
