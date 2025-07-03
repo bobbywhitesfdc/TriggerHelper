@@ -90,6 +90,8 @@ public class AbstractBasePETriggerHelperTest {
 
     }
     private static MockPEHelper initHelper() {
-        return new MockPEHelper();
+        final MockPEHelper helper = new MockPEHelper();
+        helper.setName(MockPEHelper.class.getName());
+        return helper;
     }    
 }

@@ -63,7 +63,14 @@ public class MockHelperHappyDML extends MockITriggerHelper implements ITriggerHe
         doUpdateDML();
     }
     
+    private static Boolean hasExecutedOnce=false;
     private void doUpdateDML() {
+        // Avoid recursion
+        if (hasExecutedOnce) {
+            return;
+        } else {
+            hasExecutedOnce=true;
+        }
         final Integer BATCHSIZE=10;
         List<Trigger_Framework_Mock__c> dummyTriggerFrameworkMocks = new List<Trigger_Framework_Mock__c>();
         for(Integer i=0; i < BATCHSIZE; i++) {
