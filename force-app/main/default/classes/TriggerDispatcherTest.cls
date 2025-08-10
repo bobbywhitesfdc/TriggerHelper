@@ -6,6 +6,8 @@ public class TriggerDispatcherTest {
     public static testmethod void testExceptionHandling() {
         
         TriggerDispatcher.enableTOMocking=true;
+        TriggerDispatcher.enableRunMocking=true;
+        TriggerDispatcher.mockNew= getTestMockedNew();
         TriggerDispatcher.unitTestOperationType=System.TriggerOperation.BEFORE_INSERT;
         
         MockTriggerHandler mockHandler = new MockTriggerHandler();
@@ -25,6 +27,8 @@ public class TriggerDispatcherTest {
     // Test the orchestration for each phase
     public static testmethod void testBeforeInsert() {
         TriggerDispatcher.enableTOMocking=true;
+        TriggerDispatcher.enableRunMocking=true;
+        TriggerDispatcher.mockNew = getTestMockedNew();
         TriggerDispatcher.unitTestOperationType=System.TriggerOperation.BEFORE_INSERT;
         
         Test.StartTest();
@@ -36,6 +40,10 @@ public class TriggerDispatcherTest {
     }
     public static testmethod void testBeforeUpdate() { 
         TriggerDispatcher.enableTOMocking=true;
+        TriggerDispatcher.enableRunMocking=true;
+        TriggerDispatcher.mockNew = getTestMockedOld();
+        TriggerDispatcher.mockOld = getTestMockedOld();
+
         TriggerDispatcher.unitTestOperationType=System.TriggerOperation.BEFORE_UPDATE;
         
         Test.StartTest();
@@ -47,6 +55,10 @@ public class TriggerDispatcherTest {
     }
     public static testmethod void testBeforeDelete() { 
         TriggerDispatcher.enableTOMocking=true;
+        TriggerDispatcher.enableRunMocking=true;
+        TriggerDispatcher.mockNew = getTestMockedNew();
+        TriggerDispatcher.mockOld = getTestMockedOld();
+
         TriggerDispatcher.unitTestOperationType=System.TriggerOperation.BEFORE_DELETE;
         
         Test.StartTest();
@@ -58,6 +70,9 @@ public class TriggerDispatcherTest {
     }
     public static testmethod void testAfterInsert() { 
         TriggerDispatcher.enableTOMocking=true;
+        TriggerDispatcher.enableRunMocking=true;
+        TriggerDispatcher.mockNew = getTestMockedNew();
+        TriggerDispatcher.mockOld = getTestMockedOld();
         TriggerDispatcher.unitTestOperationType=System.TriggerOperation.AFTER_INSERT;
         
         Test.StartTest();
@@ -69,6 +84,9 @@ public class TriggerDispatcherTest {
     }
     public static testmethod void testAfterUpdate() { 
         TriggerDispatcher.enableTOMocking=true;
+        TriggerDispatcher.enableRunMocking=true;
+        TriggerDispatcher.mockNew = getTestMockedNew();
+        TriggerDispatcher.mockOld = getTestMockedOld();
         TriggerDispatcher.unitTestOperationType=System.TriggerOperation.AFTER_UPDATE;
         
         Test.StartTest();
@@ -80,6 +98,9 @@ public class TriggerDispatcherTest {
     }
     public static testmethod void testAfterDelete() { 
         TriggerDispatcher.enableTOMocking=true;
+        TriggerDispatcher.enableRunMocking=true;
+        TriggerDispatcher.mockNew = getTestMockedNew();
+        TriggerDispatcher.mockOld = getTestMockedOld();
         TriggerDispatcher.unitTestOperationType=System.TriggerOperation.AFTER_DELETE;
         
         Test.StartTest();
@@ -91,6 +112,9 @@ public class TriggerDispatcherTest {
     }
     public static testmethod void testAfterUnDelete() {
         TriggerDispatcher.enableTOMocking=true;
+        TriggerDispatcher.enableRunMocking=true;
+        TriggerDispatcher.mockNew = getTestMockedNew();
+        TriggerDispatcher.mockOld = getTestMockedOld();
         TriggerDispatcher.unitTestOperationType=System.TriggerOperation.AFTER_UNDELETE;
         
         Test.StartTest();
@@ -142,19 +166,15 @@ public class TriggerDispatcherTest {
     }
     
     public static testmethod void testRunSObjectTypeGood() {
-        List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
-        testData.add(new Trigger_Framework_Mock__c(name='test'));
         Test.StartTest();
-        TriggerDispatcher.validateSObjectTypeMatch(testData, Trigger_Framework_Mock__c.SObjectType);
+        TriggerDispatcher.validateSObjectTypeMatch(getTestMockedNew(), Trigger_Framework_Mock__c.SObjectType);
         Test.StopTest();
         System.Assert(true,'Expected to reach this line');
     }
     public static testmethod void testRunSObjectTypeMismatch() {
-        List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
-        testData.add(new Trigger_Framework_Mock__c(name='test'));
         Test.StartTest();
         try {
-            TriggerDispatcher.validateSObjectTypeMatch(testData, Account.SObjectType); 
+            TriggerDispatcher.validateSObjectTypeMatch(getTestMockedNew(), Account.SObjectType); 
             System.Assert(false,'Must not reach this line');
         } catch (DesignByContractUtil.DBCAssertionException dbcex) {
             System.Assert(true,'Expected to reach this line');    
@@ -163,9 +183,6 @@ public class TriggerDispatcherTest {
     }
     
     public static testmethod void testRunMockedInsert() {
-        List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
-        testData.add(new Trigger_Framework_Mock__c(name='test'));
-
         // Initialize the Custom Setting to disable it
         Trigger_Bypass_Setting__c triggerSetting = Trigger_Bypass_Setting__c.getOrgDefaults();
         triggerSetting.Bypass_All__c=true;
@@ -174,7 +191,7 @@ public class TriggerDispatcherTest {
         TriggerDispatcher.enableTOMocking=true;
         TriggerDispatcher.unitTestOperationType=System.TriggerOperation.BEFORE_INSERT;
         TriggerDispatcher.enableRunMocking=true;
-        TriggerDispatcher.mockNew = testData;
+        TriggerDispatcher.mockNew = getTestMockedNew();
         
         Test.StartTest();
         TriggerDispatcher.run();
@@ -184,9 +201,6 @@ public class TriggerDispatcherTest {
     }
     
     public static testmethod void testRunMockedDelete() {
-        List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
-        testData.add(new Trigger_Framework_Mock__c(name='test'));
-
         // Initialize the Custom Setting to disable it
         Trigger_Bypass_Setting__c triggerSetting = Trigger_Bypass_Setting__c.getOrgDefaults();
         triggerSetting.Bypass_All__c=true;
@@ -195,7 +209,7 @@ public class TriggerDispatcherTest {
         TriggerDispatcher.enableTOMocking=true;
         TriggerDispatcher.unitTestOperationType=System.TriggerOperation.BEFORE_DELETE;
         TriggerDispatcher.enableRunMocking=true;
-        TriggerDispatcher.mockOld = testData;
+        TriggerDispatcher.mockOld = getTestMockedOld();
         
         Test.StartTest();
         TriggerDispatcher.run();
@@ -205,9 +219,6 @@ public class TriggerDispatcherTest {
     }
     
     public static testmethod void testRunUnmockedInsert() {
-        List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
-        testData.add(new Trigger_Framework_Mock__c(name='test'));
-
         // Initialize the Custom Setting to disable it
         Trigger_Bypass_Setting__c triggerSetting = Trigger_Bypass_Setting__c.getOrgDefaults();
         triggerSetting.Bypass_All__c=true;
@@ -231,9 +242,18 @@ public class TriggerDispatcherTest {
         Test.StopTest();
     }
     
+    private static List<Trigger_Framework_Mock__c> getTestMockedNew() {
+        final List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
+        testData.add(new Trigger_Framework_Mock__c(name='testNew'));
+        return testData;
+    }
+    private static List<Trigger_Framework_Mock__c> getTestMockedOld() {
+        final List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
+        testData.add(new Trigger_Framework_Mock__c(name='testOld'));
+        return testData;
+    }
+
     public static testmethod void testRunUnmockedDelete() {
-        List<Trigger_Framework_Mock__c> testData = new List<Trigger_Framework_Mock__c>();
-        testData.add(new Trigger_Framework_Mock__c(name='test'));
 
         // Initialize the Custom Setting to disable it
         Trigger_Bypass_Setting__c triggerSetting = Trigger_Bypass_Setting__c.getOrgDefaults();
