@@ -32,8 +32,8 @@ public with sharing class TriggerDispatcher {
      * For Unit testing, allow the collection to be mocked
      **/ 
     public static Schema.SObjectType getSObjectTypeFromTriggerContext() {
-        List<SObject> effectiveTypeCollection;
-        if (Trigger.isExecuting || enableRunMocking) {
+        List<SObject> effectiveTypeCollection=null;
+        if (enableRunMocking || Trigger.isExecuting ) {
             system.debug('Trigger Operation:' + getTriggerOperationType());
             switch on (getTriggerOperationType()) {
                 when BEFORE_DELETE{

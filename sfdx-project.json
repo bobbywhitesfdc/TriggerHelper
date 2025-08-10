@@ -2,11 +2,25 @@
   "packageDirectories": [
     {
       "path": "force-app",
-      "default": true
+      "default": true,
+      "package": "TriggerHelperFramework",
+      "versionName": "ver 0.1",
+      "versionNumber": "0.1.0.NEXT",
+      "versionDescription": "Trigger Helper Framework",
+      "dependencies": [
+        {
+          "package": "NebulaLogger@4.13.11"
+        }
+      ]
     }
   ],
-  "name": "ESIModel",
+  "name": "TriggerHelperFramework",
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "62.0"
+  "sourceApiVersion": "62.0",
+  "packageAliases": {
+    "TriggerHelperFramework": "0HoDn000000oM1cKAE",
+    "NebulaLogger@4.13.11": "04t5Y0000027L98QAE",
+    "TriggerHelperFramework@0.1.0-1": "04tDn000000fHnVIAU"
+  }
 }
