@@ -21,6 +21,8 @@
   "packageAliases": {
     "TriggerHelperFramework": "0HoDn000000oM1cKAE",
     "NebulaLogger@4.13.11": "04t5Y0000027L98QAE",
-    "TriggerHelperFramework@0.1.0-1": "04tDn000000fHnVIAU"
+    "NebulaLogger@4.16.5": "04tKe0000011N4KIAU",
+    "TriggerHelperFramework@0.1.0-1": "04tDn000000fHnVIAU",
+    "TriggerHelperFramework@0.1.0-3": "04tDn000000vEYfIAM"
   }
 }

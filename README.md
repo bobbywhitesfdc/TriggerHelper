@@ -4,14 +4,14 @@ TriggerHelper Framework
 
 # Quick Start
 1) Install the Unlocked Package
-Latest Stable Subscriber Package Version Id: 04tDn000000fHnVIAU
+Latest Stable Subscriber Package Version Id: 04tDn000000vEYfIAM
 
-Package Installation URL: https://login.salesforce.com/packaging/installPackage.apexp?p0=04tDn000000fHnVIAU
+Package Installation URL: https://login.salesforce.com/packaging/installPackage.apexp?p0=04tDn000000vEYfIAM
 
 Alternatively, use the CLI
 ```
  sf package install \
-    --package 04tDn000000fHnVIAU \
+    --package 04tDn000000vEYfIAM \
     --target-org <YourScratchOrgAlias> \
     --wait 10 \
     --publish-wait 10 \

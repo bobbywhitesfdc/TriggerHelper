@@ -7,4 +7,4 @@ function prop {
 }
 #create scratch org
 # let it auto-assign the username ( username="$(prop 'user.admin' )" )
-sf org create scratch -f config/project-scratch-def.json -a "$(prop 'default.env.alias' )"  --set-default --duration-days 28 -v CSGPSDEVOPS
+sf org create scratch -f config/project-scratch-def.json -a "$(prop 'SCRATCH_ALIAS' )"  --set-default --duration-days 28 -v "$(prop 'DEV_HUB_ALIAS' )"

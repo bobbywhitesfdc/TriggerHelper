@@ -322,7 +322,7 @@ public class LookupDataHandlerTest {
     
         Test.StartTest();
         
-        final Id testId = TestUtility.generateFakeId(BusinessBrand.SObjectType);
+        final Id testId = TestUtility.generateFakeId(TriggerHelperConfig__mdt.SObjectType);
         final String topic = ldh.getDefaultTopic(testId);
                 
         try {
@@ -399,7 +399,7 @@ public class LookupDataHandlerTest {
         Test.StartTest();
         
         final String topic = 'ObviouslyBadTopic';
-        final Id keyValue = TestUtility.generateFakeId(BusinessBrand.SObjectType);
+        final Id keyValue = TestUtility.generateFakeId(TriggerHelperConfig__mdt.SObjectType);
 
                 
         try {
