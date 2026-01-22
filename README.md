@@ -78,3 +78,7 @@ This repository includes a Bash script to automate your Salesforce 2GP developme
 2. **Make the script executable:**  
    ```bash
    chmod +x dev_scratch_cycle.sh
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
