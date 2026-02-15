@@ -1,7 +1,13 @@
-public class StandardSObjectTriggerHandler extends AbstractBaseTriggerHandler {
+public virtual class StandardSObjectTriggerHandler extends AbstractBaseTriggerHandler {
     static Schema.SObjectType myType;
     static StandardSObjectTriggerHandler theSingleton;
     
+    /**
+     *  Default Constructor required, but should never be used
+     **/     
+    public StandardSObjectTriggerHandler() {
+        throw new IllegalArgumentException('StandardSObjectTriggerHandler default constructor must never be used!');
+    }
 
     /**
      *  Constructor takes the SObjectType

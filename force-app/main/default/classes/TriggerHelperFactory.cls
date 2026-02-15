@@ -59,14 +59,7 @@ public inherited sharing class TriggerHelperFactory {
         final List<ITriggerHelper> helpers = new List<ITriggerHelper>();
         for (String currentHelper : getEnabledHelperClassnames(objectTypename)) {
             try {
-                // It's possible that the classname is invalid or that it doesn't implement ITriggerHelper
-                final Type helperClass = Type.forName(currentHelper);
-                
-                if (helperClass==null) throw new IllegalArgumentException('Invalid classname:' + currentHelper);
-                
-                final ITriggerHelper helperInstance = (ITriggerHelper)helperClass.newInstance();
-                helperInstance.setName(currentHelper);
-                helpers.add(helperInstance);
+                helpers.add(createHelperInstance(currentHelper));
             } catch (Exception ex) {
                 LoggingUtility.logError(ex, true);
                 throw ex;
@@ -74,4 +67,15 @@ public inherited sharing class TriggerHelperFactory {
         }
         return helpers;
     }
+    
+    public static ITriggerHelper createHelperInstance(final String helperClassName) {
+        // It's possible that the classname is invalid or that it doesn't implement ITriggerHelper
+        final Type helperClass = Type.forName(helperClassName);
+        
+        if (helperClass==null) throw new IllegalArgumentException('Invalid classname:' + helperClassName);
+        
+        final ITriggerHelper helperInstance = (ITriggerHelper)helperClass.newInstance();
+        helperInstance.setName(helperClassName);
+        return helperInstance;        
+        }
 }
