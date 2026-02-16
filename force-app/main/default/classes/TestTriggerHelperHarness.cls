@@ -7,7 +7,13 @@
  * 1. Testing a single helper in isolation (bypassing TriggerHelperFactory)
  * 2. Mocking the DML executor to verify DML operations without database commits
  * 3. End-to-end execution of both before/after phases for each operation type
-
+ * 4. Proper lifecycle management - helpers are instantiated fresh for each phase
+ * 
+ * IMPORTANT: This harness follows the same lifecycle as real triggers:
+ * - Helper is instantiated fresh in the BEFORE phase
+ * - Helper is instantiated fresh again in the AFTER phase
+ * - No state is shared between phases (matching production behavior)
+ *
  * @author Bobby White
  * @date 2026-02-15
  **/
@@ -19,9 +25,16 @@ public class TestTriggerHelperHarness extends StandardSObjectTriggerHandler {
     private DMLExecutor customDmlExecutor;
     private LookupDataHandler customLookupDataHandler;
     
-    // Tracking for test verification
+    // Tracking for test verification - separate instances for before/after phases
     @TestVisible
-    private ITriggerHelper helperInstance;
+    private ITriggerHelper beforePhaseHelper;
+    
+    @TestVisible
+    private ITriggerHelper afterPhaseHelper;
+    
+    // Track which phase we're currently in
+    private enum Phase { BEFORE, AFTER }
+    private Phase currentPhase;
 
     public TestTriggerHelperHarness(final Schema.SObjectType soType) {
         super(soType);
@@ -30,12 +43,12 @@ public class TestTriggerHelperHarness extends StandardSObjectTriggerHandler {
     /**
      * Set the helper class to test
      * 
-     * @param helperType The Type of the helper class implementing ITriggerHelper
-     * @throws TriggerHelperTestHarnessException if helperType is null
+     * @param helperClassName The fully qualified name of the helper class implementing ITriggerHelper
+     * @throws TriggerHelperTestHarnessException if helperClassName is null
      **/
     public void setHelperUnderTest(final String helperClassName) {
         if (helperClassName == null) {
-            throw new TriggerHelperTestHarnessException('Helper type cannot be null');
+            throw new TriggerHelperTestHarnessException('Helper class name cannot be null');
         }
         this.helperClassName = helperClassName;
     }
@@ -71,11 +84,13 @@ public class TestTriggerHelperHarness extends StandardSObjectTriggerHandler {
         this.customLookupDataHandler = dataHandler;
     }
     
-
-    
     /**
      * Override to instantiate only the helper under test
      * This bypasses the TriggerHelperFactory and allows isolated testing
+     * 
+     * CRITICAL: This method creates a NEW instance each time it's called,
+     * matching the real trigger behavior where helpers are instantiated 
+     * separately for before and after phases.
      **/
     public override List<ITriggerHelper> instantiateHelpers() {
         if (this.helperClassName == null) {
@@ -84,16 +99,22 @@ public class TestTriggerHelperHarness extends StandardSObjectTriggerHandler {
             );
         }
         
-        if (this.helperInstance==null) {        
-        	this.helperInstance = (ITriggerHelper) TriggerHelperFactory.createHelperInstance(this.helperClassName);
-    	}
+        // ALWAYS create a fresh instance - never reuse
+        ITriggerHelper newHelperInstance = (ITriggerHelper) TriggerHelperFactory.createHelperInstance(this.helperClassName);
         
-        // Store reference for test verification
-        activeHelpers = new List<ITriggerHelper>{ this.helperInstance };
+        // Store in the appropriate tracking variable based on phase
+        if (currentPhase == Phase.BEFORE) {
+            beforePhaseHelper = newHelperInstance;
+        } else if (currentPhase == Phase.AFTER) {
+            afterPhaseHelper = newHelperInstance;
+        }
+        
+        // Store reference for framework use
+        activeHelpers = new List<ITriggerHelper>{ newHelperInstance };
         
         return activeHelpers;
     }
-    
+        
     // ========================================================================
     // Simplified Test Entry Points
     // ========================================================================
@@ -107,13 +128,15 @@ public class TestTriggerHelperHarness extends StandardSObjectTriggerHandler {
     public void doInsert(List<SObject> newRecords) {
         validateRecordList(newRecords, 'doInsert');
         
+        // Execute before insert (set phase first)
+        currentPhase = Phase.BEFORE;
+        beforeInsert(newRecords);
+        
         // Assign Ids to simulate after insert context
         Map<Id, SObject> newRecordsWithIds = assignMockIds(newRecords);
         
-        // Execute before insert
-        beforeInsert(newRecords);
-        
-        // Execute after insert
+        // Execute after insert (set phase first)
+        currentPhase = Phase.AFTER;
         afterInsert(newRecordsWithIds);
     }
     
@@ -145,10 +168,12 @@ public class TestTriggerHelperHarness extends StandardSObjectTriggerHandler {
             );
         }
         
-        // Execute before update
+        // Execute before update (set phase first)
+        currentPhase = Phase.BEFORE;
         beforeUpdate(newRecordsMap, oldRecordsMap);
         
-        // Execute after update
+        // Execute after update (set phase first)
+        currentPhase = Phase.AFTER;
         afterUpdate(newRecordsMap, oldRecordsMap);
     }
     
@@ -164,10 +189,12 @@ public class TestTriggerHelperHarness extends StandardSObjectTriggerHandler {
         // Ensure records have Ids
         Map<Id, SObject> deletedRecordsMap = ensureRecordsHaveIds(deletedRecords);
         
-        // Execute before delete
+        // Execute before delete (set phase first)
+        currentPhase = Phase.BEFORE;
         beforeDelete(deletedRecordsMap);
         
-        // Execute after delete
+        // Execute after delete (set phase first)
+        currentPhase = Phase.AFTER;
         afterDelete(deletedRecordsMap);
     }
     
@@ -183,7 +210,9 @@ public class TestTriggerHelperHarness extends StandardSObjectTriggerHandler {
         // Ensure records have Ids
         Map<Id, SObject> undeletedRecordsMap = ensureRecordsHaveIds(undeletedRecords);
         
-        // Execute after undelete (there is no before undelete)
+        // Execute after undelete (set phase first)
+        // Note: There is no before undelete phase
+        currentPhase = Phase.AFTER;
         afterUndelete(undeletedRecordsMap);
     }
     
@@ -192,13 +221,23 @@ public class TestTriggerHelperHarness extends StandardSObjectTriggerHandler {
     // ========================================================================
     
     /**
-     * Get the helper instance being tested
-     * Useful for verifying internal state after execution
+     * Get the helper instance from the BEFORE phase
+     * Useful for verifying internal state after before phase execution
      * 
-     * @return The ITriggerHelper instance under test
+     * @return The ITriggerHelper instance used in the before phase
      **/
-    public ITriggerHelper getHelperInstance() {
-        return this.helperInstance;
+    public ITriggerHelper getBeforePhaseHelper() {
+        return this.beforePhaseHelper;
+    }
+    
+    /**
+     * Get the helper instance from the AFTER phase
+     * Useful for verifying internal state after after phase execution
+     * 
+     * @return The ITriggerHelper instance used in the after phase
+     **/
+    public ITriggerHelper getAfterPhaseHelper() {
+        return this.afterPhaseHelper;
     }
     
     /**
@@ -240,13 +279,11 @@ public class TestTriggerHelperHarness extends StandardSObjectTriggerHandler {
      **/
     private Map<Id, SObject> assignMockIds(List<SObject> records) {
         Map<Id, SObject> recordMap = new Map<Id, SObject>();
-        Integer counter = 1;
         
         for (SObject record : records) {
-            
             // Generate mock Id if not present (e.g DML is Mocked)
             if (record.Id == null) {
-                record.Id=TestUtility.generateFakeId(getSObjectType());
+                record.Id = TestUtility.generateFakeId(getSObjectType());
             }
             
             recordMap.put(record.Id, record);
@@ -275,20 +312,6 @@ public class TestTriggerHelperHarness extends StandardSObjectTriggerHandler {
         }
         
         return recordMap;
-    }
-    
-    /**
-     * Generate a mock Salesforce Id
-     * 
-     * @param keyPrefix The 3-character key prefix for the SObjectType
-     * @param counter Unique counter value
-     * @return A valid-format Salesforce Id
-     **/
-    private Id generateMockId(String keyPrefix, Integer counter) {
-        // Salesforce Ids are 15 or 18 characters
-        // Format: [3-char prefix][12-char unique identifier]
-        String uniquePart = String.valueOf(counter).leftPad(12, '0');
-        return Id.valueOf(keyPrefix + uniquePart);
     }
     
     // ========================================================================

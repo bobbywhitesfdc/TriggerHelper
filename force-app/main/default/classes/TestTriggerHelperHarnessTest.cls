@@ -20,18 +20,22 @@ public class TestTriggerHelperHarnessTest {
  		harness.doInsert(testData);        
         Test.StopTest();
         
-        MockITriggerHelper helper = (MockITriggerHelper) harness.getHelperInstance();
-        System.debug(JSON.serialize(helper));
+        MockITriggerHelper beforeHelper = (MockITriggerHelper) harness.getBeforePhaseHelper();
+        System.debug('BEFORE helper: '+JSON.serialize(beforeHelper));
         // Before Phase of Insert
-        System.AssertEquals(RECCOUNT,helper.previewBeforeInsertCounter,'before Preview should see all records');
-        System.AssertEquals(RECCOUNT,helper.meetsEntryCriteriaBeforeInsertCounter,'before Meets should see all records');
-        System.AssertEquals(RECCOUNT/2,helper.processRecordBeforeInsertCounter,'before Process should half of all records');
-        System.AssertEquals(1,helper.finalizeBeforeInsertCounter,'finalize before must be executed once');
+        System.AssertEquals(RECCOUNT,beforeHelper.previewBeforeInsertCounter,'before Preview should see all records');
+        System.AssertEquals(RECCOUNT,beforeHelper.meetsEntryCriteriaBeforeInsertCounter,'before Meets should see all records');
+        System.AssertEquals(RECCOUNT/2,beforeHelper.processRecordBeforeInsertCounter,'before Process should half of all records');
+        System.AssertEquals(1,beforeHelper.finalizeBeforeInsertCounter,'finalize before must be executed once');
+
+        MockITriggerHelper afterHelper = (MockITriggerHelper) harness.getAfterPhaseHelper();
+        System.debug('AFTER helper: '+JSON.serialize(beforeHelper));
+        
         // After Phase of Insert
-        System.AssertEquals(RECCOUNT,helper.previewAfterInsertCounter,'after Preview should see all records');
-        System.AssertEquals(RECCOUNT,helper.meetsEntryCriteriaAfterInsertCounter,'after Meets should see all records');
-        System.AssertEquals(RECCOUNT/2,helper.processRecordAfterInsertCounter,'after Process should half of all records');
-        System.AssertEquals(1,helper.finalizeAfterInsertCounter,'finalize after must be executed once');
+        System.AssertEquals(RECCOUNT,afterHelper.previewAfterInsertCounter,'after Preview should see all records');
+        System.AssertEquals(RECCOUNT,afterHelper.meetsEntryCriteriaAfterInsertCounter,'after Meets should see all records');
+        System.AssertEquals(RECCOUNT/2,afterHelper.processRecordAfterInsertCounter,'after Process should half of all records');
+        System.AssertEquals(1,afterHelper.finalizeAfterInsertCounter,'finalize after must be executed once');
 
     }
 }
