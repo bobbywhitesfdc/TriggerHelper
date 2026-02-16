@@ -42,7 +42,7 @@ public abstract with sharing class AbstractBaseTriggerHandler implements ITrigge
     @TestVisible
     List<ITriggerHelper> activeHelpers = null;
     
-    public List<ITriggerHelper> instantiateHelpers(){
+    public virtual List<ITriggerHelper> instantiateHelpers(){
         // Use the factory to modularize and separate the concerns
         final List<ITriggerHelper> helpers = TriggerHelperFactory.getHelpers(getSObjectType().getDescribe().getName());
         
