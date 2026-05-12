@@ -128,23 +128,153 @@ trigger <SObject>Trigger on <SObject__c> (before insert, ...) {
 }
 ```
 
-2. A `TriggerHelperConfig__mdt` custom metadata record stub:
+2. A `TriggerHelperConfig__mdt` custom metadata record stub.
+
+**Before generating the XML, determine which SObject field to populate.**
+
+Salesforce does not allow certain standard objects to be selected via the Entity Reference
+picker in CMT records. The framework handles this with two separate fields and two separate
+SOQL queries (CMT does not support OR across a relationship field and a text field).
+
+**Step 1 — Check known exceptions first.**
+
+The following standard objects are known to require `AlternateSObject__c` regardless of
+what `EntityDefinition.IsCustomizable` returns — the CMT Entity Reference picker maintains
+its own internal restricted list that does not match `IsCustomizable`:
+
+- `User`
+- `Task`
+- `Event`
+
+If the SObject is on this list, use `AlternateSObject__c` and skip the query.
+
+**Step 2 — For all other objects, run the EntityDefinition query as a hint:**
+
+```bash
+sf data query --target-org <alias> --query "SELECT QualifiedApiName, IsCustomizable FROM EntityDefinition WHERE QualifiedApiName = '<SObjectApiName>'"
+```
+
+| `IsCustomizable` result | Field to populate |
+|------------------------|-------------------|
+| `true` | `SObjectType__c` — likely safe, but see note below |
+| `false` or no rows returned | `AlternateSObject__c` |
+
+**Important:** `IsCustomizable = true` is a necessary but not sufficient condition for
+`SObjectType__c`. Other standard objects may also be restricted by the CMT picker but not
+yet confirmed. If deployment fails with a "bad value for restricted picklist field" error
+on `SObjectType__c`, switch to `AlternateSObject__c` and add the object to the known
+exceptions list above.
+
+Using the wrong field causes silent failure at runtime — no helpers run and no error is raised.
+
+**Read one of the existing CMT records as the canonical template.**
+
+Check the local project first, then fall back to the framework repo:
+
+```bash
+# Preferred — adopter's own records (already validated against their org)
+ls force-app/main/default/customMetadata/TriggerHelperConfig.*.md-meta.xml 2>/dev/null | head -1
+
+# Fallback — framework repo (always present, symlinked peer directory)
+ls ../TriggerHelper/force-app/main/default/customMetadata/TriggerHelperConfig.*.md-meta.xml 2>/dev/null | head -1
+```
+
+Read whichever file is found first. Use it as the exact template — namespaces, field order, value types,
+and any fields added in future package versions are all authoritative there. Substitute only the fields
+that change:
+- `<label>`, `HelperClassName__c`, `Context__c`, `ExecutionSequence__c`, `IsPilotMode__c`, `RelatedFlows__c`
+- The SObject field pair (`SObjectType__c` / `AlternateSObject__c`) per the `IsCustomizable` determination above
+
+The only critical difference from a test record: `Context__c = Production`.
+
+The templates below are a last-resort fallback only if neither location yields a file.
+
+For most objects — use `SObjectType__c`:
 ```xml
 <!-- force-app/main/default/customMetadata/TriggerHelperConfig.<RecordName>.md-meta.xml -->
 <?xml version="1.0" encoding="UTF-8"?>
-<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata">
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <label><RecordName></label>
-    <values><field>HelperClassName__c</field><value xsi:type="xsi:string"><HelperClassName></value></values>
-    <values><field>SObjectType__c</field><value xsi:type="xsi:string"><SObjectApiName></value></values>
-    <values><field>Enabled__c</field><value xsi:type="xsi:boolean">true</value></values>
-    <values><field>ExecutionSequence__c</field><value xsi:type="xsi:double">10</value></values>
-    <values><field>Context__c</field><value xsi:type="xsi:string">Production</value></values>
-    <values><field>IsPilotMode__c</field><value xsi:type="xsi:boolean">false</value></values>
+    <protected>false</protected>
+    <values>
+        <field>AlternateSObject__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Context__c</field>
+        <value xsi:type="xsd:string">Production</value>
+    </values>
+    <values>
+        <field>Enabled__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>ExecutionSequence__c</field>
+        <value xsi:type="xsd:double">10.0</value>
+    </values>
+    <values>
+        <field>HelperClassName__c</field>
+        <value xsi:type="xsd:string"><HelperClassName></value>
+    </values>
+    <values>
+        <field>IsPilotMode__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>RelatedFlows__c</field>
+        <value xsi:type="xsd:string">Not Applicable</value>
+    </values>
+    <values>
+        <field>SObjectType__c</field>
+        <value xsi:type="xsd:string"><SObjectApiName></value>
+    </values>
 </CustomMetadata>
 ```
 
-Remind the user: the `TriggerLookupTopic__mdt` record for any new lookup topic must also
-be created (Production context and UnitTest context both required if tests use live queries).
+For restricted objects (`User`, `Event`, `Task`, etc.) — use `AlternateSObject__c` instead:
+```xml
+<!-- force-app/main/default/customMetadata/TriggerHelperConfig.<RecordName>.md-meta.xml -->
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label><RecordName></label>
+    <protected>false</protected>
+    <values>
+        <field>AlternateSObject__c</field>
+        <value xsi:type="xsd:string"><SObjectApiName></value>
+    </values>
+    <values>
+        <field>Context__c</field>
+        <value xsi:type="xsd:string">Production</value>
+    </values>
+    <values>
+        <field>Enabled__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>ExecutionSequence__c</field>
+        <value xsi:type="xsd:double">10.0</value>
+    </values>
+    <values>
+        <field>HelperClassName__c</field>
+        <value xsi:type="xsd:string"><HelperClassName></value>
+    </values>
+    <values>
+        <field>IsPilotMode__c</field>
+        <value xsi:type="xsd:boolean">false</value>
+    </values>
+    <values>
+        <field>RelatedFlows__c</field>
+        <value xsi:type="xsd:string">Not Applicable</value>
+    </values>
+    <values>
+        <field>SObjectType__c</field>
+        <value xsi:nil="true"/>
+    </values>
+</CustomMetadata>
+```
+
+Remind the user: a `TriggerLookupTopic__mdt` record is required for any new lookup topic.
+Use `/triggerhelper-write-lookup-topic` to generate it.
 
 ## Step 8 — Self-Review Checklist
 
@@ -158,4 +288,5 @@ be created (Production context and UnitTest context both required if tests use l
 - [ ] No `Logger.debug(msg, record)` in before-insert context
 - [ ] Inner exception class(es) defined for each fault condition
 - [ ] Trigger file is dispatcher-only
-- [ ] CMT stub produced with correct field values
+- [ ] `EntityDefinition` query was run to determine `IsCustomizable` for the target SObject
+- [ ] CMT stub uses `SObjectType__c` if `IsCustomizable = true`, `AlternateSObject__c` otherwise — never both
