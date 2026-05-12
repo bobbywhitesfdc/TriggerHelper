@@ -1,0 +1,18 @@
+{
+  "_comment": "Merge the entries below into the matching sections of your ~/.claude/settings.json.",
+
+  "permissions": {
+    "allow": [
+      "Bash(sf apex test run:*)",
+      "Bash(sf apex run test:*)",
+      "Bash(sf org list:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr list:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)"
+    ]
+  }
+}
