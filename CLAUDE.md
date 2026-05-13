@@ -94,6 +94,12 @@ Two project skills accelerate new helper and test authoring:
 
 Skills read the framework source directly. See `.claude/README.md` for prerequisites and permissions setup.
 
+To avoid per-call prompts during the scratch org lifecycle, deploy, and GitHub PR workflow, merge the framework developer permissions snippet into your `~/.claude/settings.json`:
+
+```sh
+cat .claude/settings-snippet-framework-dev.json
+```
+
 ## Conventions
 
 - **No logging in helpers.** All logging goes through `LoggingUtility` (Nebula Logger wrapper), called from the handler layer.

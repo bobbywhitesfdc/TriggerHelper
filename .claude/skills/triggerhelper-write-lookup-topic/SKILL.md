@@ -42,6 +42,27 @@ Determine and confirm:
   field **must** appear in the SELECT — the framework uses it to group results by parent.
 - **Topic name convention:** `Related<ChildSObjectName>`. e.g. `RelatedCaseMilestones`.
 
+#### RelatedList variant — Aggregate queries
+Use this when you want aggregate results grouped by a Salesforce Id field (e.g. count of
+child records per owner, sum per account). The framework's RelatedList path supports this
+without any code changes — `AggregateResult.get(fieldName)` preserves native types, so
+the `(Id)` cast on `KeyFieldname__c` works cleanly.
+
+- **Query form:** `SELECT <keyIdField>, <AGG_FUNC>(<field>) <alias> [, ...] FROM <SObject> WHERE <keyIdField> IN :keySet GROUP BY <keyIdField>`
+- **`KeyFieldname__c`:** the grouped Id field (e.g. `OwnerId`). Must appear in SELECT and in GROUP BY.
+- **`SObjectTypeName__c`:** `AggregateResult` (not the queried SObject name).
+- **`Id` must NOT appear in SELECT** — aggregate queries do not return `Id`.
+- **Alias all aggregate columns** — e.g. `COUNT(Id) recordCount`. Aliases are required for
+  the caller to access values via `AggregateResult.get('alias')`.
+- **Topic name convention:** functional description, not `Related<SObject>`. e.g. `AccountsOwnedBy`, `OpportunitiesByOwner`.
+- **Consumer pattern:** `getDataSetForRelatedListTopic` returns `Map<Id, List<SObject>>` with
+  one-element lists (one aggregate row per key value). The primary use is an existence check —
+  `resultsMap.containsKey(ownerId)` — but alias values are accessible if needed:
+  ```apex
+  AggregateResult ar = (AggregateResult) resultsMap.get(ownerId)[0];
+  Integer count = (Integer) ar.get('recordCount');
+  ```
+
 ### ExternalId (EXTERNALID)
 - **When:** you have a string value (not a Salesforce Id) that matches a unique field on
   the target object. e.g. a `StockKeepingUnit` or `FederationIdentifier`.
@@ -84,8 +105,9 @@ Rules that must hold for every generated query:
 3. The WHERE clause must filter on `:keySet`:
    - Detail/RelatedList: `WHERE <keyField> IN :keySet`
    - ExternalId: `WHERE <externalIdField> IN :keySet`
-4. `Id` should always be in the SELECT.
+4. `Id` should always be in the SELECT — **except aggregate queries**, where `Id` must be omitted.
 5. Additional WHERE filters are appended with `AND`.
+6. For aggregate queries: every aggregate function must have a named alias; the grouped field must appear in both SELECT and GROUP BY.
 
 Validate the query structure mentally before generating:
 - Every field in SELECT is a real API field name (confirm with user if uncertain).
@@ -187,6 +209,40 @@ Example — RelatedList (CaseMilestones):
 </CustomMetadata>
 ```
 
+Example — RelatedList Aggregate (Account count by owner):
+```xml
+<!-- force-app/main/default/customMetadata/TriggerLookupTopic.AccountsOwnedBy.md-meta.xml -->
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Accounts Owned By</label>
+    <protected>false</protected>
+    <values>
+        <field>Context__c</field>
+        <value xsi:type="xsd:string">Production</value>
+    </values>
+    <values>
+        <field>KeyFieldname__c</field>
+        <value xsi:type="xsd:string">OwnerId</value>
+    </values>
+    <values>
+        <field>QueryTemplate__c</field>
+        <value xsi:type="xsd:string">SELECT OwnerId, COUNT(Id) accountCount FROM Account WHERE OwnerId IN :keySet GROUP BY OwnerId</value>
+    </values>
+    <values>
+        <field>SObjectTypeName__c</field>
+        <value xsi:type="xsd:string">AggregateResult</value>
+    </values>
+    <values>
+        <field>TopicType__c</field>
+        <value xsi:type="xsd:string">RelatedList</value>
+    </values>
+    <values>
+        <field>Topic__c</field>
+        <value xsi:type="xsd:string">AccountsOwnedBy</value>
+    </values>
+</CustomMetadata>
+```
+
 Example — ExternalId (User by FederationIdentifier):
 ```xml
 <!-- force-app/main/default/customMetadata/TriggerLookupTopic.UserByFederationId.md-meta.xml -->
@@ -231,3 +287,4 @@ Example — ExternalId (User by FederationIdentifier):
 - [ ] `Context__c = Production`
 - [ ] If topic existed: only SELECT field list was changed; user warned to validate query
 - [ ] XML format matches the canonical template from local or framework source files
+- [ ] If aggregate: `Id` is absent from SELECT; GROUP BY includes `KeyFieldname__c`; all aggregate functions have named aliases; `SObjectTypeName__c` = `AggregateResult`

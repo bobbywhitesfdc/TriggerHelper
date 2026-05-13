@@ -1,0 +1,35 @@
+{
+  "_comment": "Framework developer snippet — superset of the adopter snippet. Adds scratch org lifecycle, anonymous Apex, package install, and GitHub PR workflow.",
+
+  "permissions": {
+    "allow": [
+      "Bash(sf apex test run:*)",
+      "Bash(sf apex run test:*)",
+      "Bash(sf apex run:*)",
+      "Bash(sf project deploy start:*)",
+      "Bash(sf project deploy report:*)",
+      "Bash(sf data query:*)",
+      "Bash(sf config get:*)",
+      "Bash(sf org list:*)",
+      "Bash(sf org create scratch:*)",
+      "Bash(sf org delete scratch:*)",
+      "Bash(sf package install:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git checkout:*)",
+      "Bash(gh auth status:*)",
+      "Bash(gh auth switch:*)",
+      "Bash(gh pr create:*)",
+      "Bash(gh pr edit:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr list:*)",
+      "Bash(bash dev_scratch_cycle.sh:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(readlink:*)"
+    ]
+  }
+}

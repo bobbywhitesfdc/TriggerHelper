@@ -1,8 +1,15 @@
 # TriggerHelper Framework
 
-TriggerHelper Framework
+TriggerHelper Framework is designed to simplify the creation and maintenance of Apex Triggers in complex salesforce orgs.   It fully supports modular development especially in projects with multiple concurrent workstreams.  It optimizes and simplifies SOQL query lookups and batches DML for great scalability.   Nebula Logging is integrated into the framework.
 
-# Quick Start
+# Quick Start — Claude Code
+
+This repo ships Claude Code skills that accelerate helper authoring for framework adopters (creating a trigger, creating a helper, generating unit tests, query topic creation)
+
+
+Setup instructions, permissions snippets, and symlink steps: [`.claude/README.md`](.claude/README.md)
+
+# Quick Start Manual
 1) Install the Unlocked Package
 Latest Stable Subscriber Package Version Id: 04tDn000000vFYqIAM
 
@@ -21,7 +28,7 @@ Alternatively, use the CLI
 
 2) Create an Apex trigger on your object (e.g Account)
 ```
-trigger AccountTrigger on Acccount (before insert, before update, before delete
+trigger AccountTrigger on Account (before insert, before update, before delete
                                                                   , after insert, after update
                                                                   , after delete, after undelete ) {
    TriggerDispatcher.run();
@@ -29,7 +36,7 @@ trigger AccountTrigger on Acccount (before insert, before update, before delete
 ```
 
 3) Create your first helper Apex Class by extending  AbstractBaseTriggerHelper
-(Override methods only as needed for your use case)
+(Override methods only as needed for your use case — or use `/triggerhelper-write-helper` in Claude Code)
 ```
 /**
  * Mock Helper class for testing the HappyPath for DML of the MockTriggerHandler
@@ -50,7 +57,9 @@ public class MyFirstAccountHelper extends AbstractBaseTriggerHelper implements I
         
 }
 ```
-4) Create a Custom Metadata Type record configuration (TriggerHelperConfig__mdt)
+4) Write unit tests for your helper (or use `/triggerhelper-unit-tests` in Claude Code)
+
+5) Create a Custom Metadata Type record configuration (TriggerHelperConfig__mdt)
  - Configure the object (Account)
  - Set the HelperClass name to your helper (MyFirstAccountHelper)
  - Set the Execution Order to 1

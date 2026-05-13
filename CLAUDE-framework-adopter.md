@@ -241,13 +241,25 @@ If you have cloned the TriggerHelper repository as a peer to this project, you c
 # From your project root
 ln -s ../TriggerHelper/.claude/skills/triggerhelper-write-helper .claude/skills/
 ln -s ../TriggerHelper/.claude/skills/triggerhelper-unit-tests .claude/skills/
+ln -s ../TriggerHelper/.claude/skills/triggerhelper-write-lookup-topic .claude/skills/
 ```
 
 Then invoke them as:
 - `/triggerhelper-write-helper` — generates a helper class + trigger + CMT stub for a given SObject and use case
 - `/triggerhelper-unit-tests` — generates a test class using `TestTriggerHelperHarness` for an existing helper
+- `/triggerhelper-write-lookup-topic` — generates a `TriggerLookupTopic__mdt` CMT record for a new query topic
 
-To keep framework documentation current in your project's `CLAUDE.md`, add this import (adjust relative path if your layout differs):
+### Permissions
+
+To avoid per-call prompts during deploy and test operations, merge the adopter permissions snippet into your `~/.claude/settings.json`:
+
+```bash
+cat ../TriggerHelper/.claude/settings-snippet-adopter.json
+```
+
+### Keeping framework documentation current
+
+Add this import to your project's `CLAUDE.md` (adjust the relative path if your layout differs):
 
 ```
 @../TriggerHelper/CLAUDE-framework-adopter.md

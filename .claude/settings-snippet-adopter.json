@@ -1,0 +1,24 @@
+{
+  "_comment": "Adopter snippet — merge permissions.allow into your ~/.claude/settings.json. Covers helper authoring, test execution, and deploy to an existing org.",
+
+  "permissions": {
+    "allow": [
+      "Bash(sf apex test run:*)",
+      "Bash(sf apex run test:*)",
+      "Bash(sf project deploy start:*)",
+      "Bash(sf project deploy report:*)",
+      "Bash(sf data query:*)",
+      "Bash(sf config get:*)",
+      "Bash(sf org list:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git checkout:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(readlink:*)"
+    ]
+  }
+}
