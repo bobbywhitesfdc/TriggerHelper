@@ -12,7 +12,13 @@
       "Bash(git log:*)",
       "Bash(git show:*)",
       "Bash(grep:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(ls:*)",
+      "Bash(readlink:*)",
+      "Bash(sf data query:*)",
+      "Bash(sf project deploy start:*)",
+      "Bash(sf project deploy report:*)",
+      "Bash(sf config get:*)"
     ]
   }
 }

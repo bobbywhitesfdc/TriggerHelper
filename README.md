@@ -50,11 +50,18 @@ public class MyFirstAccountHelper extends AbstractBaseTriggerHelper implements I
         
 }
 ```
-4) Create a Custom Metadata Type record configuration (TriggerHelperConfig_mdt)
+4) Create a Custom Metadata Type record configuration (TriggerHelperConfig__mdt)
  - Configure the object (Account)
  - Set the HelperClass name to your helper (MyFirstAccountHelper)
  - Set the Execution Order to 1
  - Enable it
+
+> **Note — User, Event, Task, and other restricted objects:**
+> Salesforce does not allow certain standard objects (including `User`, `Event`, and `Task`) to be
+> selected via the Entity Reference picker in Custom Metadata Type records. For these objects,
+> leave `SObjectType__c` blank and populate `AlternateSObject__c` with the plain API name
+> (e.g. `User`) instead. The framework queries both fields, so behavior is identical at runtime —
+> only the way the CMT record is populated differs.
 
 # TriggerHelperFramework Scratch Org Automation
 
