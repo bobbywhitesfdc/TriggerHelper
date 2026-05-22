@@ -108,6 +108,44 @@ cat .claude/settings-snippet-framework-dev.json
 - **Bulk-safe queries.** Use `LookupDataHandler.request*` in `preview*` methods; never SOQL inside loops.
 - `DesignByContractUtil` — use for precondition/postcondition assertions, not ad-hoc `if (x == null) throw`.
 
+## Framework Developer Workflow
+
+Follow this sequence for every defect fix or enhancement. Do not skip steps.
+
+**1. Create a GitHub Issue first**
+Document the problem before writing any code. The issue must be OSS-appropriate (see OSS Hygiene below). Include: root cause or observed behavior, affected classes/methods, and proposed fix approach.
+```sh
+gh issue create --title "..." --body "..."
+```
+
+**2. Create a local branch**
+Branch name should be short and descriptive.
+```sh
+git checkout -b my-fix-branch
+```
+
+**3. Fix, test locally**
+- Make the change
+- Run the full scratch org cycle to confirm all tests pass:
+```sh
+./dev_scratch_cycle.sh
+```
+
+**4. Run the publish and install lifecycle**
+In order:
+```sh
+./publish_package_version.sh          # creates new beta package version
+./package_install_test.sh             # installs beta in clean scratch org, runs RunLocalTests
+./promote_package_version.sh          # promotes to released, updates README 04t ID
+```
+A `release_pipeline.sh` may exist locally (gitignored) to automate this sequence end-to-end.
+
+**5. Open a PR cross-referencing the issue**
+The PR description must include `Fixes #<issue>` so the issue auto-closes on merge. Must be OSS-appropriate — no customer references.
+```sh
+gh pr create --title "..." --body "Fixes #<issue> ..."
+```
+
 ## OSS Hygiene
 
 This is a public open-source repository. Before committing any file, verify it contains no customer-specific references: org aliases, sandbox names, email addresses, company names, or internal tooling names. Personal workflow scripts that reference specific orgs belong in `.gitignore`, not in the repo. A `CLAUDE.local.md` file may exist at the project root for private operational context — it is gitignored and never committed.
