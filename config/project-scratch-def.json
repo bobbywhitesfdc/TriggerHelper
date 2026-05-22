@@ -1,6 +1,6 @@
 {
   "orgName": "TriggerFramework Development",
-  "edition": "Developer",
+  "edition": "developer",
   "features": ["EnableSetPasswordInApi"],
   "settings": {
     "lightningExperienceSettings": {

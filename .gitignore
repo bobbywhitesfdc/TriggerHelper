@@ -4,6 +4,9 @@
 
 *.progress
 progress.control
+release_pipeline.sh
+release_pipeline.log
+.platqa_test_results/
 
 # Salesforce cache
 .sf/
