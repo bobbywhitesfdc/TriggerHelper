@@ -7,6 +7,7 @@ progress.control
 release_pipeline.sh
 release_pipeline.log
 .platqa_test_results/
+CLAUDE.local.md
 
 # Salesforce cache
 .sf/

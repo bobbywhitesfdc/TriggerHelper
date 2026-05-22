@@ -108,6 +108,10 @@ cat .claude/settings-snippet-framework-dev.json
 - **Bulk-safe queries.** Use `LookupDataHandler.request*` in `preview*` methods; never SOQL inside loops.
 - `DesignByContractUtil` — use for precondition/postcondition assertions, not ad-hoc `if (x == null) throw`.
 
+## OSS Hygiene
+
+This is a public open-source repository. Before committing any file, verify it contains no customer-specific references: org aliases, sandbox names, email addresses, company names, or internal tooling names. Personal workflow scripts that reference specific orgs belong in `.gitignore`, not in the repo. A `CLAUDE.local.md` file may exist at the project root for private operational context — it is gitignored and never committed.
+
 ## Dependencies
 
 - **Nebula Logger 4.16.5** — only external dependency; installed from package ID `04tKe0000011N4KIAU` during scratch org init.
