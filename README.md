@@ -11,15 +11,15 @@ Setup instructions, permissions snippets, and symlink steps: [`.claude/README.md
 
 # Quick Start Manual
 1) Install the Unlocked Package
-Latest Stable Subscriber Package Version Id: 04tDn000000vFYqIAM
+Latest Stable Subscriber Package Version Id: 04tDn000000vFfwIAE
 
-Package Installation URL: https://login.salesforce.com/packaging/installPackage.apexp?p0=04tDn000000vFYqIAM
+Package Installation URL: https://login.salesforce.com/packaging/installPackage.apexp?p0=04tDn000000vFfwIAE
 
 
 Alternatively, use the CLI
 ```
  sf package install \
-    --package 04tDn000000vFYqIAM \
+    --package 04tDn000000vFfwIAE \
     --target-org <YourScratchOrgAlias> \
     --wait 10 \
     --publish-wait 10 \

@@ -1,8 +1,8 @@
 /**
  * Unit test for TriggerHelperFactory
- * Does not manipulate "data", no DML, just examining config
- * So it doesn't run-as a test persona.
- **/ 
+ * Negative pilot-mode tests run as a Standard User — sysadmin profile receives
+ * FF_TriggerHelperPilot via 2GP auto-grant and cannot assert checkPermission == false.
+ **/
 @isTest(isParallel=false)
 public class TriggerHelperFactoryTest {
     
@@ -10,15 +10,32 @@ public class TriggerHelperFactoryTest {
     @TestSetup
     static void setup() {
         System.RunAs(getRunningUser()) {
-            FF_TriggerHelperPilot_Logging__c settings = FF_TriggerHelperPilot_Logging__c.getInstance();
+            FF_TriggerHelperPilot_Logging__c settings = FF_TriggerHelperPilot_Logging__c.getOrgDefaults();
             settings.Enabled__c = true;
             upsert settings;
+
+            String emailDomain = UserInfo.getUserEmail().substringAfter('@');
+            Profile standardProfile = [SELECT Id FROM Profile WHERE Name = 'Standard User' LIMIT 1];
+            insert new User(
+                Alias = 'pilottst',
+                Email = 'pilottest@' + emailDomain,
+                EmailEncodingKey = 'UTF-8',
+                LastName = 'PilotTest',
+                LanguageLocaleKey = 'en_US',
+                LocaleSidKey = 'en_US',
+                ProfileId = standardProfile.Id,
+                TimeZoneSidKey = 'America/Los_Angeles',
+                UserName = 'pilottest.' + UserInfo.getOrganizationId() + '@' + emailDomain
+            );
         }
-    }    
+    }
 
     private static User getRunningUser() {
         return new User(Id=UserInfo.getUserId());
-    }     
+    }
+    private static User getStandardTestUser() {
+        return [SELECT Id FROM User WHERE UserName LIKE 'pilottest.%' LIMIT 1];
+    }
     private static Boolean hasPilotFF() {
         return System.FeatureManagement.checkPermission(TriggerHelperFactory.PILOT_FF);
     }
@@ -75,7 +92,7 @@ public class TriggerHelperFactoryTest {
      * Must exclude Helpers in PilotMode
      **/ 
     public static testMethod void userNotInPilot() {
-        final User testUser = getRunningUser();       
+        final User testUser = getStandardTestUser();
         TriggerHelperFactory.factoryContext='TestHappyPath'; // Test mode
         System.runAs(testUser) {
             System.AssertEquals(false,hasPilotFF(),'Must not have Pilot FF for this test');
@@ -157,7 +174,7 @@ public class TriggerHelperFactoryTest {
      * Must log debug messages
      **/ 
     public static testMethod void userInPilotAndDebugModeOn() {
-        final User testUser = getRunningUser();       
+        final User testUser = getStandardTestUser();
         TriggerHelperFactory.factoryContext='TestHappyPath'; // Test mode
         System.runAs(testUser) {
             System.AssertEquals(false,hasPilotFF(),'Must not have Pilot FF for this test');
@@ -199,11 +216,11 @@ public class TriggerHelperFactoryTest {
      * Must log debug messages
      **/ 
     public static testMethod void userInPilotAndDebugModeOff() {
-        FF_TriggerHelperPilot_Logging__c settings = FF_TriggerHelperPilot_Logging__c.getInstance();
+        FF_TriggerHelperPilot_Logging__c settings = FF_TriggerHelperPilot_Logging__c.getOrgDefaults();
         settings.Enabled__c = false;
         upsert settings;
         TriggerHelperFactory.factoryContext='TestHappyPath'; // Test mode
-        final User testUser = getRunningUser();       
+        final User testUser = getStandardTestUser();
 
         System.runAs(testUser) {
             System.AssertEquals(false,hasPilotFF(),'Must not have Pilot FF for this test');

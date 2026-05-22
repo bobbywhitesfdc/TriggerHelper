@@ -44,7 +44,7 @@ public inherited sharing class TriggerHelperFactory {
                      helperClassNames.add(current.HelperClassName__c);                                            
                 }                                     
          }
-         if(FF_TriggerHelperPilot_Logging__c.getInstance().Enabled__c){
+         if(FF_TriggerHelperPilot_Logging__c.getOrgDefaults().Enabled__c){
             Logger.debug('Running ' + helperClassNames + 'Trigger Helper(s) for User: ' + UserInfo.getUserName());
             Logger.saveLog();
          }

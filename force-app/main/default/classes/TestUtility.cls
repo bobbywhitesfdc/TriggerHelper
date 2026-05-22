@@ -62,33 +62,43 @@ public with sharing class TestUtility {
          '0'.repeat(12-result.length()) + result;
    }
     
-    /**
-     * Helper method to assign a Custom Permission by DeveloperName
-    **/  
-    public static void assignFeatureFlag(final Id userId, final String ffPermissionDevName) {
-        DesignByContractUtil.assertNotEquals(null,userId,'userId is required');
-        DesignByContractUtil.assertNotEquals(null,ffPermissionDevName,'ff name is required');
-        
-        final Id psId = getPSWithFeatureFlag(ffPermissionDevName);
-        PermissionSetAssignment psa = new PermissionSetAssignment(AssigneeId=userId,PermissionSetId=psId);
-       // System.RunAs(TestGlobalConstants.getRunningUser()) {
-        User runningUser = new User(Id=UserInfo.getUserId());
-        System.RunAs(runningUser){
-            insert psa;
-            System.Debug('PS assigned:' + psa);
-        }        
-    }
-    
-    /** 
-     * Find a permissionSet that has the desired Feature Flag
-     **/ 
     public static Id getPSWithFeatureFlag(final String ffPermissionDevName) {
-        final List<SetupEntityAccess> setupEntities  = [
-            SELECT ParentId FROM SetupEntityAccess 
+        final List<SetupEntityAccess> setupEntities = [
+            SELECT ParentId FROM SetupEntityAccess
             WHERE SetupEntityId IN (SELECT Id FROM CustomPermission WHERE DeveloperName = :ffPermissionDevName)];
-        
-        DesignByContractUtil.AssertNotEquals(true,setupEntities.isEmpty(),'No PermissionSet found containing:'+ffPermissionDevName);
-        return setupEntities[0].ParentId; 
+        DesignByContractUtil.AssertNotEquals(true, setupEntities.isEmpty(), 'No PermissionSet found containing:' + ffPermissionDevName);
+        return setupEntities[0].ParentId;
+    }
+
+    /**
+      This test method creates a new temporary PermissionSet
+      with which to assign the Feature Flag (Custom Permission)
+      It's a test-only duration and will be rolled back when the unit
+      test finishes executing
+    **/
+    public static void assignFeatureFlag(final Id userId, final String ffPermissionDevName) {
+        DesignByContractUtil.assertNotEquals(null, userId, 'userId is required');
+        DesignByContractUtil.assertNotEquals(null, ffPermissionDevName, 'ff name is required');
+
+        // Must create a fresh PS + SetupEntityAccess; querying an existing PS does not
+        // trigger permission recalc inside System.runAs (Salesforce platform behavior).
+        System.runAs(new User(Id = UserInfo.getUserId())) {
+            PermissionSet ps = new PermissionSet(
+                Name = 'TestFF_' + ffPermissionDevName,
+                Label = 'Test FF ' + ffPermissionDevName
+            );
+            insert ps;
+            insert new List<SObject>{
+                new SetupEntityAccess(
+                    ParentId = ps.Id,
+                    SetupEntityId = [SELECT Id FROM CustomPermission WHERE DeveloperName = :ffPermissionDevName LIMIT 1].Id
+                ),
+                new PermissionSetAssignment(
+                    AssigneeId = userId,
+                    PermissionSetId = ps.Id
+                )
+            };
+        }
     }
 
 }
