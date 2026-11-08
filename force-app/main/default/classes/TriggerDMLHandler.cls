@@ -343,6 +343,7 @@ public class TriggerDMLHandler implements IHelperDMLHandler {
     @TestVisible List<Database.UpsertResult> toUpsertResults = new List<Database.UpsertResult>();
     @TestVisible List<Database.DeleteResult> toDeleteResults = new List<Database.DeleteResult>();
     @TestVisible List<Database.UndeleteResult> toUndeleteResults = new List<Database.UndeleteResult>();
+    @TestVisible List<Database.SaveResult> toPublishResults = new List<Database.SaveResult>();
     
     /**
      * Convenience method to execute all of the possible DMLs
@@ -354,5 +355,6 @@ public class TriggerDMLHandler implements IHelperDMLHandler {
         toUpdateResults = updateObjects();
         toDeleteResults = deleteObjects();
         toUndeleteResults = undeleteObjects();
+        toPublishResults = publish();
     }
 }

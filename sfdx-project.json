@@ -5,7 +5,7 @@
       "default": true,
       "package": "TriggerHelperFramework",
       "versionName": "ver 0.1",
-      "versionNumber": "0.1.1.NEXT",
+      "versionNumber": "0.1.2.NEXT",
       "versionDescription": "Trigger Helper Framework",
       "dependencies": [
         {
@@ -26,6 +26,8 @@
     "TriggerHelperFramework@0.1.0-3": "04tDn000000vEYfIAM",
     "TriggerHelperFramework@0.1.0-4": "04tDn000000vFYqIAM",
     "TriggerHelperFramework@0.1.1-1": "04tDn000000vFfrIAE",
-    "TriggerHelperFramework@0.1.1-2": "04tDn000000vFfwIAE"
+    "TriggerHelperFramework@0.1.1-2": "04tDn000000vFfwIAE",
+    "TriggerHelperFramework@0.1.2-1": "04tDn000000JVSFIA4",
+    "TriggerHelperFramework@0.1.2-2": "04tDn000000JVSKIA4"
   }
 }

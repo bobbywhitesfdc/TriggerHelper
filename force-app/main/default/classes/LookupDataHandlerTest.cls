@@ -4,13 +4,13 @@
 @IsTest(IsParallel=true)
 public class LookupDataHandlerTest {
     public static final Integer CHUNK_MAX = 200;
-    
-    
+
+
     @testsetup
     public static void setup() {
-        
+
     }
-    
+
     /**
      * Test the requestItem method - positive
      **/ 
@@ -69,23 +69,26 @@ public class LookupDataHandlerTest {
     public static testmethod void testGetDetailItemSingle() {
         QueryTopicFactory.context='UnitTest';
         LookupDataHandler ldh = new LookupDataHandler();
-        
+
         final String TESTTOPIC = 'User';
         final Id testId = UserInfo.getUserId();
+        // Compare against the running user's actual values rather than asserting non-null:
+        // optional fields (e.g. FirstName) may legitimately be null for the running user.
+        // Creating a test user instead is not portable (e.g. Allowed Email Domains restrictions)
+        final User expected = [select Id, FirstName, LastName, Profile.Name, IsActive, Email from User where Id = :testId];
 
-        
         Test.StartTest();
-        ldh.requestItemDetail(testId);        
+        ldh.requestItemDetail(testId);
         User result = (User) ldh.getItemDetail(testId);
         Test.StopTest();
-        
+
         System.AssertNotEquals(null,result,'Must have a valid result');
         System.AssertEquals(testId,result.Id,'Id field must match requested value');
-        System.AssertNotEquals(null,result.FirstName,'FirstName field must be set');
-        System.AssertNotEquals(null,result.LastName,'LastName field must be set');
-        System.AssertNotEquals(null,result.Profile.Name,'Profile.Name field must be set');
-        System.AssertNotEquals(null,result.IsActive,'IsActive field must be set');
-        System.AssertNotEquals(null,result.Email,'Email field must be set');
+        System.AssertEquals(expected.FirstName,result.FirstName,'FirstName field must match');
+        System.AssertEquals(expected.LastName,result.LastName,'LastName field must match');
+        System.AssertEquals(expected.Profile.Name,result.Profile.Name,'Profile.Name field must match');
+        System.AssertEquals(expected.IsActive,result.IsActive,'IsActive field must match');
+        System.AssertEquals(expected.Email,result.Email,'Email field must match');
         
     }
     
@@ -312,25 +315,26 @@ public class LookupDataHandlerTest {
     } 
     
     /**
-     * Negative Test to demonstrate error handling on a Missing definition
-     **/ 
+     * Negative Test to demonstrate error handling on a Bad SOQL definition for a Detail topic
+     * The Trigger_Framework_Mock__c UnitTest topic deliberately references an invalid field
+     **/
     public static testmethod void negativeDetailTopicSOQL() {
         QueryTopicFactory.context='UnitTest';
         LookupDataHandler ldh = new LookupDataHandler();
-        
 
-    
+
+
         Test.StartTest();
-        
-        final Id testId = TestUtility.generateFakeId(TriggerHelperConfig__mdt.SObjectType);
+
+        final Id testId = TestUtility.generateFakeId(Trigger_Framework_Mock__c.SObjectType);
         final String topic = ldh.getDefaultTopic(testId);
-                
+
         try {
             ldh.requestItemDetail(testId);
             ldh.getItemDetail(testId);
             System.Assert(false,'Must not reach this line');
         } catch (QueryTopicException qtex) {
-            System.Assert(true,'Expected');
+            System.Assert(qtex.getMessage().contains(LookupDataHandler.MALFORMEDSOQL),'Expected malformed SOQL error, got: ' + qtex.getMessage());
         }
        
         Test.StopTest();                
