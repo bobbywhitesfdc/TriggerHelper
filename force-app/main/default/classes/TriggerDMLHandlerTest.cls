@@ -1274,5 +1274,29 @@ public class TriggerDMLHandlerTest {
         System.AssertEquals(handler.toUpdate.size(),handler.toUpdateResults.size(),'UPDATE results must be same as input');
         System.AssertEquals(handler.toDelete.size(),handler.toDeleteResults.size(),'DELETE results must be same as input');
         System.AssertEquals(handler.toUndelete.size(),handler.toUndeleteResults.size(),'UNDELETE results must be same as input');
-    }    
+    }
+    /**
+     * Ensure that the convenient apply publishes queued Platform Events
+     **/
+    public static testmethod void applyDMLPublishesPlatformEvents() {
+        // Bypass all Triggers for this test
+        setBypass(true);
+
+        final TriggerDMLHandler handler = new TriggerDMLHandler();
+        final List<TriggerMockPE__e> myTestRecords = new List<TriggerMockPE__e>();
+
+        for (Integer i=0; i < BATCHSIZE; i++) {
+            myTestRecords.add(new TriggerMockPE__e(RequiredField__c='Populated'+i));
+            handler.addForPublish(myTestRecords[i]);
+        }
+
+        Test.StartTest();
+        handler.applyDML();
+        Test.StopTest();
+
+        System.AssertEquals(myTestRecords.size(),handler.toPublishResults.size(),'applyDML() must publish all queued Platform Events');
+        for (Database.saveResult current : handler.toPublishResults) {
+            System.Assert(current.isSuccess(),'Expected all PEs to succeed');
+        }
+    }
 }

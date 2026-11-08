@@ -124,6 +124,23 @@ public class TriggerDispatcherTest {
         
         System.Assert(mockHandler.afterUnDeleteWasCalled,'Expected After UnDelete to be called:' + TriggerDispatcher.unitTestOperationType );
     }
+
+    /**
+     * Real (unmocked) undelete DML through the trigger - Trigger.oldMap is null for undelete
+     * so the dispatcher must pass Trigger.newMap to the handler
+     **/
+    public static testmethod void testRealUndelete() {
+        final Trigger_Framework_Mock__c record = new Trigger_Framework_Mock__c(Name='testUndelete',RequiredField__c='Populated');
+        insert record;
+        delete record;
+
+        Test.StartTest();
+        final Database.UndeleteResult result = Database.undelete(record.Id,false);
+        Test.StopTest();
+
+        System.Assert(result.isSuccess(),'Undelete must succeed through the trigger: ' + result.getErrors());
+        System.AssertEquals(1,[select count() from Trigger_Framework_Mock__c where Id = :record.Id],'Record must be restored');
+    }
     
     
     public class MockTriggerHandler implements ITriggerHandler {

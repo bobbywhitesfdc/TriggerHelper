@@ -26,7 +26,18 @@ public class StandardSObjectTriggerHandlerTest {
         Test.StartTest();
         final Boolean result = handler.getSObjectByPassValue(setting);
         Test.StopTest();
-        System.AssertEquals(false,result,'Always bypass=false for this handler');        
+        System.AssertEquals(false,result,'Always bypass=false for this handler');
+    }
+
+    public static testmethod void testDefaultConstructorRejected() {
+        Test.StartTest();
+        try {
+            new StandardSObjectTriggerHandler();
+            System.Assert(false,'Must not reach this line');
+        } catch (IllegalArgumentException iae) {
+            System.Assert(true,'Expected');
+        }
+        Test.StopTest();
     }
 
 }

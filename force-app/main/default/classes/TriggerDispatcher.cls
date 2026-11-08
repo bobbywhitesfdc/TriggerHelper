@@ -98,7 +98,8 @@ public with sharing class TriggerDispatcher {
                     handler.afterDelete(Trigger.oldMap);
                 }
                 when AFTER_UNDELETE{
-                    handler.afterUndelete(Trigger.oldMap);
+                    // For Undelete, only Trigger.New and Trigger.NewMap are populated
+                    handler.afterUndelete(Trigger.newMap);
                 }
             }           
         } catch (Exception ex) { LoggingUtility.logError(ex,true); throw(ex); } // Log and rethrow unhandled exceptions
